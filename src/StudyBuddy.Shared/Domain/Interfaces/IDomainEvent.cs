@@ -1,6 +1,8 @@
+using MediatR;
+
 namespace StudyBuddy.Shared.Domain.Interfaces;
 
-public interface IDomainEvent
+public interface IDomainEvent : INotification
 {
 	
 }

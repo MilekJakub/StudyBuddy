@@ -4,21 +4,27 @@ namespace StudyBuddy.Domain.Projects.ValueObjects;
 
 public class ProjectTechnology : ValueObject
 {
-	public ProjectTechnology(string technology)
+	public ProjectTechnology(string name, string description, string? version)
 	{
 		// TODO: checks
-		Value = technology;
+		Name = name;
+		Description = description;
+		Version = version;
 	}
 
-	public string Value { get; set; }
+	public string Name { get; set; }
+	public string Description { get; set; }
+	public string? Version { get; }
 
 	public override IEnumerable<object> GetAtomicValues()
 	{
-		yield return Value;
+		yield return Name;
+		yield return Description;
+		yield return Version ?? "";
 	}
 
 	public override string ToString()
 	{
-		return Value;
+		return Name;
 	}
 }

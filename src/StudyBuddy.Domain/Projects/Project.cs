@@ -167,10 +167,10 @@ public abstract class Project : Entity<ProjectId>
 
 	private ProjectRequirement GetRequirement(string name)
 	{
-		foreach(var requirenment in Requirements)
+		foreach(var requirement in Requirements)
 		{
-			if(requirenment.Value == name)
-				return requirenment;
+			if(requirement.Name == name)
+				return requirement;
 		}
 
 		throw new RequirementNotFoundException(name);
@@ -180,7 +180,7 @@ public abstract class Project : Entity<ProjectId>
 	{
 		foreach(var technology in Technologies)
 		{
-			if(technology.Value == name)
+			if(technology.Name == name)
 				return technology;
 		}
 
@@ -191,7 +191,7 @@ public abstract class Project : Entity<ProjectId>
 	{
 		foreach(var language in ProgrammingLanguages)
 		{
-			if(language.Value == name)
+			if(language.Name == name)
 				return language;
 		}
 

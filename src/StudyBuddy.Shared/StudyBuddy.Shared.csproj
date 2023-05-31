@@ -7,4 +7,15 @@
     <NoWarn>8618</NoWarn>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="12.0.1" />
+    <PackageReference Include="MediatR.Contracts" Version="2.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Exceptions\Projects\BadRequest\" />
+    <Folder Include="Exceptions\Users\NotFound\" />
+  </ItemGroup>
+
 </Project>

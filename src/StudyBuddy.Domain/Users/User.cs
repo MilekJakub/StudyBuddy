@@ -1,4 +1,5 @@
 using StudyBuddy.Domain.Teams.Entities;
+using StudyBuddy.Domain.Users.Events;
 using StudyBuddy.Domain.Users.ValueObjects;
 using StudyBuddy.Shared.Domain;
 
@@ -12,9 +13,9 @@ public class User : Entity<UserId>
 		UserId id,
 		Username username,
 		Email email,
-		Password password,
+		PasswordHash hash,
         UserRole role,
-		Firstname fullName,
+		Firstname firstname,
 		Lastname lastname,
         RegisterNumber registerNumber,
 		DateTime createdAt)
@@ -22,17 +23,19 @@ public class User : Entity<UserId>
         Id = id;
         Email = email;
         Username = username;
-        Password = password;
+        PasswordHash = hash;
         Role = role;
-        Firstname = fullName;
+        Firstname = firstname;
 		Lastname = lastname;
         RegisterNumber = registerNumber;
         CreatedAt = createdAt;
+        
+        AddEvent(new UserRegisteredEvent(this));
     }
 
 	public Username Username { get; private set; }
     public Email Email { get; private set; }
-    public Password Password { get; private set; }
+    public PasswordHash PasswordHash { get; private set; }
     public UserRole Role { get; private set; }
     public Firstname Firstname { get; private set; }
 	public Lastname Lastname { get; private set; }

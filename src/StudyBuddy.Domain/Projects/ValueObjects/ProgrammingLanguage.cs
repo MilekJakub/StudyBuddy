@@ -4,21 +4,24 @@ namespace StudyBuddy.Domain.Projects.ValueObjects;
 
 public sealed class ProgrammingLanguage : ValueObject
 {
-	public ProgrammingLanguage(string language)
+	public ProgrammingLanguage(string languageName, string? version)
 	{
 		// TODO: checks
-		Value = language;
+		Name = languageName;
+		Version = version;
 	}
 
-	public string Value { get; }
+	public string Name { get; }
+	public string? Version { get; }
 
 	public override IEnumerable<object> GetAtomicValues()
 	{
-		yield return Value;
+		yield return Name;
+		yield return Version ?? "";
 	}
 
 	public override string ToString()
 	{
-		return Value;
+		return Name;
 	}
 }
