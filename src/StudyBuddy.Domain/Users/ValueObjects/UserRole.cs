@@ -2,10 +2,15 @@ using StudyBuddy.Shared.Domain;
 
 namespace StudyBuddy.Domain.Users.ValueObjects;
 
-public class UserRole : ValueObject
+public sealed record UserRole : IValueObject
 {
-	public static IEnumerable<string> AvailableRoles { get; } = new[] {"teacher", "student"};
+	public static IEnumerable<string> AvailableRoles { get; } = new[] {"admin", "teacher", "student"};
 
+	private UserRole()
+	{
+		// For Entity Framework
+	}
+	
 	public UserRole(string role)
 	{
 		// TODO: checks
@@ -13,11 +18,6 @@ public class UserRole : ValueObject
 	}
 
 	public string Value { get; }
-
-	public override IEnumerable<object> GetAtomicValues()
-	{
-		yield return Value;
-	}
 
 	public override string ToString()
 	{

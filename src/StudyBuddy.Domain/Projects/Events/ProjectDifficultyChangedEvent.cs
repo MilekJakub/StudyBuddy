@@ -4,4 +4,4 @@ using StudyBuddy.Shared.Domain.Interfaces;
 
 namespace StudyBuddy.Domain.Projects.Events;
 
-public record ProjectDifficultyChangedEvent(Project Project, ProjectDifficulty Difficulty) : IDomainEvent;
+public record ProjectDifficultyChangedEvent(Project Project, ProjectDifficultyId DifficultyId) : IDomainEvent;

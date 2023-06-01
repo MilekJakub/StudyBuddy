@@ -1,3 +1,5 @@
-﻿namespace StudyBuddy.Application.Teams.Commands.Delete;
+﻿using StudyBuddy.Shared.Application.Interfaces;
 
-public record DeleteTeamRequest(Guid Id);
+namespace StudyBuddy.Application.Teams.Commands.Delete;
+
+public record DeleteTeamRequest(Guid Id) : ICommand;

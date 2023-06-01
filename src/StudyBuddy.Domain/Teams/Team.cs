@@ -3,68 +3,74 @@ using StudyBuddy.Domain.Teams.Entities;
 using StudyBuddy.Domain.Teams.Events;
 using StudyBuddy.Domain.Teams.ValueObjects;
 using StudyBuddy.Shared.Domain;
-using StudyBuddy.Shared.Exceptions;
 using StudyBuddy.Shared.Exceptions.Teams.NotFound;
 
 namespace StudyBuddy.Domain.Teams;
 
-public abstract class Team : Entity<TeamId>
+public class Team : Entity
 {
-	private readonly List<Membership> _memberships = new();
-	private readonly List<Project> _completedProjects = new();
+	private readonly List<Member> _members = new();
+	private readonly List<Project> _projects = new();
 
+	private Team()
+	{
+		// For Entity Framework
+	}
+	
 	public Team(
 		TeamId id,
 		TeamName name,
-		Membership leader)
+		Member leader)
 	{
 		Id = id;
 		Name = name;
-		Leader = leader;
+		_members.Add(leader);
 	}
 
+	public TeamId Id { get; init; }
 	public TeamName Name { get; private set; }
-	public Membership Leader { get; private set; }
-	public IReadOnlyCollection<Membership> Memberships => _memberships;
-	public IReadOnlyCollection<Project> CompletedProjects => _completedProjects;
+	public Member Leader => _members.Single(m => m.Role.Value == "Leader");
+	public IReadOnlyCollection<Member> Members => _members;
+	public IReadOnlyCollection<Project> Projects => _projects;
 
+	public void AddProject(Project project)
+	{
+		_projects.Add(project);
+		AddEvent(new ProjectAddedToTeamEvent(this, project));
+	}
+	
 	public void ChangeName(TeamName name)
 	{
 		Name = name;
 		AddEvent(new TeamNameChangedEvent(this, name));
 	}
 	
-	public void ChangeLeader(Membership leader)
+	public void ChangeLeader(Member leader, MemberRole previousLeaderRole)
 	{
-		Leader = leader;
+		Leader.ChangeRole(previousLeaderRole);
+		leader.ChangeRole(new MemberRole("Leader"));
 		AddEvent(new TeamLeaderChangedEvent(this, leader));
 	}
 
-	public void AddMember(Membership membership)
+	public void AddMember(Member member)
 	{
-		_memberships.Add(membership);
-		AddEvent(new MembershipAddedToTeamEvent(this, membership));
+		_members.Add(member);
+		AddEvent(new MemberAddedToTeamEvent(this, member));
 	}
 
-	public void KickMember(MembershipId id)
+	public void KickMember(MemberId id)
 	{
-		var membership = GetMembership(id);
-		_memberships.Remove(membership);
-		AddEvent(new MemberKickedFromProjectEvent(this, membership));
-	}
-	
-	public void AddCompletedProject(Project project)
-	{
-		_completedProjects.Add(project);
-		AddEvent(new CompletedProjectAddedToTeamEvent(this, project));
+		var member = GetMember(id);
+		_members.Remove(member);
+		AddEvent(new MemberKickedFromProjectEvent(this, member));
 	}
 
-	private Membership GetMembership(MembershipId id)
+	private Member GetMember(MemberId id)
 	{
-		foreach(var membership in _memberships)
+		foreach(var members in _members)
 		{
-			if(membership.Id.Equals(id))
-				return membership;
+			if(members.Id.Equals(id))
+				return members;
 		}
 
 		throw new MemberNotFoundException(id.ToString());

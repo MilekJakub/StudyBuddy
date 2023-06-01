@@ -25,28 +25,28 @@ public static class Mapper
     public static TeamDto TeamDto(Team team)
     {
         var leader = MemberDto(team.Leader);
-        var members = team.Memberships.Select(MemberDto);
-        var completedProjects = team.CompletedProjects.Select(ProjectDto);
+        var members = team.Members.Select(MemberDto);
+        var projects = team.Projects.Select(ProjectDto);
 
         return new TeamDto(
             team.Id.Value,
             team.Name.ToString(),
             leader,
             members,
-            completedProjects);
+            projects);
     }
 
-    public static MemberDto MemberDto(Membership membership)
+    public static MemberDto MemberDto(Member member)
     {
         return new MemberDto(
-            membership.Id.Value,
-            membership.Member.Username.ToString(),
-            membership.Member.Email.ToString(),
-            membership.Member.Firstname.ToString(),
-            membership.Member.Lastname.ToString(),
-            membership.Member.RegisterNumber.ToString(),
-            membership.Role.ToString(),
-            membership.JoinDate);
+            member.Id.Value,
+            member.User.Username.ToString(),
+            member.User.Email.ToString(),
+            member.User.Firstname.ToString(),
+            member.User.Lastname.ToString(),
+            member.User.RegisterNumber.ToString(),
+            member.Role.ToString(),
+            member.JoinDate);
     }
 
     public static ProjectDto ProjectDto(Project project)
@@ -61,10 +61,10 @@ public static class Mapper
             requirements,
             technologies,
             languages,
-            project.Difficulty.ToString(),
+            project.ProjectDifficultyId.ToString(),
             project.EstimatedTimeToFinish,
             project.Deadline,
-            project.State.ToString());
+            project.ProjectState.ToString());
     }
 
     public static ProjectRequirementDto ProjectRequirementDto(ProjectRequirement projectRequirement)

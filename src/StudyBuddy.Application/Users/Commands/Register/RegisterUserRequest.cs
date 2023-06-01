@@ -1,6 +1,6 @@
 ﻿using StudyBuddy.Shared.Application.Interfaces;
 
-namespace StudyBuddy.Application.Users.Commands.RegisterUser;
+namespace StudyBuddy.Application.Users.Commands.Register;
 
 public record RegisterUserRequest(
     Guid Id,
@@ -10,4 +10,4 @@ public record RegisterUserRequest(
     string Role,
     string Firstname,
     string Lastname,
-    string RegisterNumber) : ICommand;
+    string RegisterNumber);

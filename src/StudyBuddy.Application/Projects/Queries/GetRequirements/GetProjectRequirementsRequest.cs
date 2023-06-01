@@ -1,3 +1,6 @@
-﻿namespace StudyBuddy.Application.Projects.Queries.GetRequirements;
+﻿using StudyBuddy.Application.Projects.DTOs;
+using StudyBuddy.Shared.Application.Interfaces;
 
-public record GetProjectRequirementsRequest(Guid ProjectId);
+namespace StudyBuddy.Application.Projects.Queries.GetRequirements;
+
+public record GetProjectRequirementsRequest(Guid ProjectId) : IQuery<ICollection<ProjectRequirementDto>>;

@@ -3,4 +3,4 @@ using StudyBuddy.Shared.Domain.Interfaces;
 
 namespace StudyBuddy.Domain.Teams.Events;
 
-public record TeamLeaderChangedEvent(Team Team, Membership Leader) : IDomainEvent;
+public record TeamLeaderChangedEvent(Team Team, Member Leader) : IDomainEvent;

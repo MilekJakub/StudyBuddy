@@ -1,35 +1,27 @@
 using StudyBuddy.Shared.Domain;
-using StudyBuddy.Shared.Exceptions;
 using StudyBuddy.Shared.Exceptions.Users.BadRequest;
 
 namespace StudyBuddy.Domain.Users.ValueObjects;
 
-public class UserId : ValueObject, IEquatable<UserId>
+public sealed record UserId : IValueObject
 {
-	public UserId(string id)
+	private UserId()
 	{
-		Guid parsed;
-
-		if(!Guid.TryParse(id, out parsed))
-		{
-			throw new InvalidUserIdException(id);
-		}
-
-		Value = parsed;
+		// For Entity Framework	
+	}
+	
+	public UserId(Guid id)
+	{
+		Value = id;
 	}
 
 	public Guid Value { get; }
-
-	public bool Equals(UserId? other)
-		=> other is not null && other.Value == Value;
-	
-	public override IEnumerable<object> GetAtomicValues()
-	{
-		yield return Value;
-	}
 
 	public override string ToString()
 	{
 		return Value.ToString();
 	}
+	
+	public static implicit operator Guid(UserId id) => id.Value;
+	public static implicit operator UserId(Guid id) => new(id);
 }

@@ -1,3 +1,5 @@
-﻿namespace StudyBuddy.Application.Teams.Commands.Create;
+﻿using StudyBuddy.Shared.Application.Interfaces;
 
-public record CreateTeamRequest(Guid Id, string Name, Guid UserId);
+namespace StudyBuddy.Application.Teams.Commands.Create;
+
+public record CreateTeamRequest(Guid Id, string Name, Guid UserId) : ICommand;

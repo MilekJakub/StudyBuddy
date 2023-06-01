@@ -3,4 +3,4 @@ using StudyBuddy.Shared.Application.Interfaces;
 
 namespace StudyBuddy.Application.Projects.Queries.GetAll;
 
-public record GetAllProjectsRequest(Guid UserId) : IQuery<IEnumerable<ProjectDto>>;
+public record GetAllProjectsRequest(Guid UserId) : IQuery<ICollection<ProjectDto>>;

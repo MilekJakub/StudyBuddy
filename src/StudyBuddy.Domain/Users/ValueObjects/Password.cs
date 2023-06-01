@@ -2,8 +2,13 @@ using StudyBuddy.Shared.Domain;
 
 namespace StudyBuddy.Domain.Users.ValueObjects;
 
-public class Password : ValueObject
+public sealed record Password : IValueObject
 {
+	private Password()
+	{
+		// For Entity Framework
+	}
+	
 	public Password(string password)
 	{
 		// TODO: checks
@@ -12,11 +17,6 @@ public class Password : ValueObject
 
 	public string Value { get; }
 
-	public override IEnumerable<object> GetAtomicValues()
-	{
-		yield return Value;
-	}
-	
 	public override string ToString()
 	{
 		return Value;

@@ -3,32 +3,25 @@ using StudyBuddy.Shared.Exceptions.Teams.BadRequest;
 
 namespace StudyBuddy.Domain.Teams.ValueObjects;
 
-public class TeamId : ValueObject, IEquatable<TeamId>
+public sealed record TeamId : IValueObject
 {
-	public TeamId(string id)
+	private TeamId()
 	{
-		Guid parsed;
+		// For Entity Framework
+	}
 
-		if(!Guid.TryParse(id, out parsed))
-		{
-			throw new InvalidTeamIdException(id);
-		}
-
-		Value = parsed;
+	public TeamId(Guid id)
+	{
+		Value = id;
 	}
 
 	public Guid Value { get; }
-
-	public bool Equals(TeamId? other)
-		=> other is not null && other.Value == Value;
-
-	public override IEnumerable<object> GetAtomicValues()
-	{
-		yield return Value;
-	}
 
 	public override string ToString()
 	{
 		return Value.ToString();
 	}
+	
+	public static implicit operator Guid(TeamId id) => id.Value;
+	public static implicit operator TeamId(Guid id) => new(id);	
 }

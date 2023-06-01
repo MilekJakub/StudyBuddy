@@ -1,7 +1,7 @@
 ﻿namespace StudyBuddy.Application.Teams.DTOs;
 
 public record MemberDto(
-    Guid MembershipId,
+    Guid MemberId,
     string Username,
     string Email,
     string Firstname,

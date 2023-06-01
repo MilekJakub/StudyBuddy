@@ -1,44 +1,71 @@
 using StudyBuddy.Domain.Projects.ValueObjects;
 using StudyBuddy.Domain.Projects.Enums;
+using StudyBuddy.Domain.Projects.Enums.ProjectDifficulty;
+using StudyBuddy.Domain.Projects.Enums.ProjectState;
 using StudyBuddy.Shared.Domain;
 using StudyBuddy.Domain.Teams;
 using StudyBuddy.Domain.Projects.Events;
+using StudyBuddy.Domain.Teams.ValueObjects;
 using StudyBuddy.Shared.Exceptions.Projects.NotFound;
 
 namespace StudyBuddy.Domain.Projects;
 
-public abstract class Project : Entity<ProjectId>
+public class Project : Entity
 {
 	private readonly List<ProjectRequirement> _requirements = new();
 	private readonly List<ProjectTechnology> _technologies = new();
 	private readonly List<ProgrammingLanguage> _languages = new();
 
+	private Project()
+	{
+		// For Entity Framework	
+	}
+	
 	public Project(
 		ProjectId id,
 		ProjectTopic topic,
 		ProjectDescription description,
+		ProjectDifficultyId difficultyId,
 		ProjectDifficulty difficulty,
 		DateTime estimatedTimeToFinish,
 		DateTime deadline,
+		ProjectStateId stateId,
+		ProjectState state,
 		Team team)
 	{
 		Id = id;
 		Topic = topic;
 		Description = description;
-		Difficulty = difficulty;
 		EstimatedTimeToFinish = estimatedTimeToFinish;
 		Deadline = deadline;
+		TeamId = team.Id;
+		Team = team;
+		
+		ProjectDifficultyId = difficultyId;
+		ProjectDifficulty = difficulty;
+		
+		ProjectStateId = stateId;
+		ProjectState = state;
 	}
 
+	public ProjectId Id { get; init; }
 	public ProjectTopic Topic { get; private set; }
 	public ProjectDescription Description { get; private set; }
+	public DateTime EstimatedTimeToFinish { get; private set; }
+	public DateTime Deadline { get; private set; }
+	
 	public IReadOnlyCollection<ProjectRequirement> Requirements => _requirements;
 	public IReadOnlyCollection<ProjectTechnology> Technologies => _technologies;
 	public IReadOnlyCollection<ProgrammingLanguage> ProgrammingLanguages => _languages;
-	public ProjectDifficulty Difficulty { get; private set; }
-	public DateTime EstimatedTimeToFinish { get; private set; }
-	public DateTime Deadline { get; private set; }
-	public ProjectState State { get; private set; }
+	
+	public TeamId TeamId { get; private set; }
+	public Team Team { get; private set; }
+	
+	public ProjectDifficultyId ProjectDifficultyId { get; private set; }
+	public ProjectDifficulty ProjectDifficulty { get; private set; }
+	
+	public ProjectStateId ProjectStateId { get; private set; }
+	public ProjectState ProjectState { get; private set; }
 	
 	public void ChangeTopic(ProjectTopic topic)
 	{
@@ -58,7 +85,7 @@ public abstract class Project : Entity<ProjectId>
 		AddEvent(new RequirementAddedToProjectEvent(this, requirement));
 	}
 
-	public void AddRequirements(IEnumerable<ProjectRequirement> requirements)
+	public void AddRequirements(ICollection<ProjectRequirement> requirements)
 	{
 		foreach(var requirement in requirements)
 		{
@@ -74,7 +101,7 @@ public abstract class Project : Entity<ProjectId>
 		_requirements.Remove(requirement);
 	}
 
-	public void RemoveRequirements(IEnumerable<string> names)
+	public void RemoveRequirements(ICollection<string> names)
 	{
 		foreach(var name in names)
 		{
@@ -88,7 +115,7 @@ public abstract class Project : Entity<ProjectId>
 		AddEvent(new TechnologyAddedToProjectEvent(this, technology));
 	}
 
-	public void AddTechnologies(IEnumerable<ProjectTechnology> technologies)
+	public void AddTechnologies(ICollection<ProjectTechnology> technologies)
 	{
 		foreach(var technology in technologies)
 		{
@@ -103,7 +130,7 @@ public abstract class Project : Entity<ProjectId>
 		_technologies.Remove(technology);
 	}
 
-	public void RemoveTechnologies(IEnumerable<string> names)
+	public void RemoveTechnologies(ICollection<string> names)
 	{
 		foreach(var name in names)
 		{
@@ -117,7 +144,7 @@ public abstract class Project : Entity<ProjectId>
 		AddEvent(new ProgrammingLanguageAddedToProjectEvent(this, language));
 	}
 
-	public void AddProgrammingLanguages(IEnumerable<ProgrammingLanguage> languages)
+	public void AddProgrammingLanguages(ICollection<ProgrammingLanguage> languages)
 	{
 		foreach(var language in languages)
 		{
@@ -133,7 +160,7 @@ public abstract class Project : Entity<ProjectId>
 		_languages.Remove(language);
 	}
 
-	public void RemoveProgrammingLanguages(IEnumerable<string> names)
+	public void RemoveProgrammingLanguages(ICollection<string> names)
 	{
 		foreach(var name in names)
 		{
@@ -141,10 +168,10 @@ public abstract class Project : Entity<ProjectId>
 		}
 	}
 
-	public void ChangeDifficulty(ProjectDifficulty difficulty)
+	public void ChangeDifficulty(ProjectDifficultyId difficultyId)
 	{
-		Difficulty = difficulty;
-		AddEvent(new ProjectDifficultyChangedEvent(this, difficulty));
+		ProjectDifficultyId = difficultyId;
+		AddEvent(new ProjectDifficultyChangedEvent(this, difficultyId));
 	}
 
 	public void ChangeEstimatedTimeToFinish(DateTime time)
@@ -161,7 +188,7 @@ public abstract class Project : Entity<ProjectId>
 
 	public void ChangeState(ProjectState state)
 	{
-		State = state;
+		ProjectState = state;
 		AddEvent(new ProjectStateChangedEvent(this, state));
 	}
 

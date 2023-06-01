@@ -1,3 +1,5 @@
-﻿namespace StudyBuddy.Application.Teams.Commands.ChangeName;
+﻿using StudyBuddy.Shared.Application.Interfaces;
 
-public record ChangeTeamNameRequest(Guid TeamId, string Name);
+namespace StudyBuddy.Application.Teams.Commands.ChangeName;
+
+public record ChangeTeamNameRequest(Guid TeamId, string Name) : ICommand;

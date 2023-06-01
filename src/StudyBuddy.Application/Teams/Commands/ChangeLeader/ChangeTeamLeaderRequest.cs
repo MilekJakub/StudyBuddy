@@ -1,3 +1,5 @@
-﻿namespace StudyBuddy.Application.Teams.Commands.ChangeLeader;
+﻿using StudyBuddy.Shared.Application.Interfaces;
 
-public record ChangeTeamLeaderRequest(Guid TeamId, Guid LeaderId);
+namespace StudyBuddy.Application.Teams.Commands.ChangeLeader;
+
+public record ChangeTeamLeaderRequest(Guid TeamId, Guid LeaderId) : ICommand;

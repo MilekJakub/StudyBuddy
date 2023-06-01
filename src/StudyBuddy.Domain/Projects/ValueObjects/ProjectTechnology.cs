@@ -2,8 +2,13 @@ using StudyBuddy.Shared.Domain;
 
 namespace StudyBuddy.Domain.Projects.ValueObjects;
 
-public class ProjectTechnology : ValueObject
+public sealed record ProjectTechnology : IValueObject
 {
+	private ProjectTechnology()
+	{
+		// For Entity Framework
+	}
+	
 	public ProjectTechnology(string name, string description, string? version)
 	{
 		// TODO: checks
@@ -15,13 +20,6 @@ public class ProjectTechnology : ValueObject
 	public string Name { get; set; }
 	public string Description { get; set; }
 	public string? Version { get; }
-
-	public override IEnumerable<object> GetAtomicValues()
-	{
-		yield return Name;
-		yield return Description;
-		yield return Version ?? "";
-	}
 
 	public override string ToString()
 	{

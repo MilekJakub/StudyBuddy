@@ -1,3 +1,5 @@
-﻿namespace StudyBuddy.Application.Teams.Commands.KickMember;
+﻿using StudyBuddy.Shared.Application.Interfaces;
 
-public record KickTeamMemberRequest(Guid TeamId, Guid MembershipId);
+namespace StudyBuddy.Application.Teams.Commands.KickMember;
+
+public record KickTeamMemberRequest(Guid TeamId, Guid MemberId) : ICommand;

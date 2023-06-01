@@ -1,5 +1,5 @@
 using StudyBuddy.Domain.Projects.Enums;
-using StudyBuddy.Domain.Projects.ValueObjects;
+using StudyBuddy.Domain.Projects.Enums.ProjectState;
 using StudyBuddy.Shared.Domain.Interfaces;
 
 namespace StudyBuddy.Domain.Projects.Events;

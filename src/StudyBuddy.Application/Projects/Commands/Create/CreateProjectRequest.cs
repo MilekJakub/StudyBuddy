@@ -7,6 +7,6 @@ public record CreateProjectRequest(
     Guid Id,
     string Topic,
     string Description,
-    ProjectDifficulty Difficulty,
+    ProjectDifficultyId DifficultyId,
     DateTime EstimatedTimeToFinish,
     DateTime Deadline) : ICommand;

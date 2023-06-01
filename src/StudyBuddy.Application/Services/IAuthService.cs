@@ -1,6 +1,6 @@
 ﻿using StudyBuddy.Application.Users.Commands;
-using StudyBuddy.Application.Users.Commands.LoginUser;
-using StudyBuddy.Application.Users.Commands.RegisterUser;
+using StudyBuddy.Application.Users.Commands.Login;
+using StudyBuddy.Application.Users.Commands.Register;
 
 namespace StudyBuddy.Application.Services;
 

@@ -1,3 +1,3 @@
-﻿namespace StudyBuddy.Application.Users.Commands.RegisterUser;
+﻿namespace StudyBuddy.Application.Users.Commands.Register;
 
 public record RegisterUserResponse(Guid Id);

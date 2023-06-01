@@ -5,10 +5,15 @@ using StudyBuddy.Shared.Domain;
 
 namespace StudyBuddy.Domain.Users;
 
-public class User : Entity<UserId>
+public sealed class User : Entity
 {
-    private readonly List<Membership> _memberships = new();
-
+	private List<Member> _memberships = new();
+	
+	private User()
+	{
+		// For Entity Framework
+	}
+	
     public User(
 		UserId id,
 		Username username,
@@ -33,6 +38,7 @@ public class User : Entity<UserId>
         AddEvent(new UserRegisteredEvent(this));
     }
 
+    public UserId Id { get; init; }
 	public Username Username { get; private set; }
     public Email Email { get; private set; }
     public PasswordHash PasswordHash { get; private set; }
@@ -41,5 +47,5 @@ public class User : Entity<UserId>
 	public Lastname Lastname { get; private set; }
     public RegisterNumber RegisterNumber { get; private set; }
     public DateTime CreatedAt { get; private set; }
-    public IReadOnlyCollection<Membership> Memberships => _memberships;
+    public IReadOnlyCollection<Member> Memberships => _memberships;
 }

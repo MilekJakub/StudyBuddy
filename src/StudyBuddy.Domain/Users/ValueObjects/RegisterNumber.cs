@@ -5,8 +5,13 @@ namespace StudyBuddy.Domain.Users.ValueObjects;
 /// <summary>
 /// Register Number is an unique number to identify every student.
 /// </summary>
-public class RegisterNumber : ValueObject
+public sealed record RegisterNumber : IValueObject
 {
+	private RegisterNumber()
+	{
+		// For Entity Framework
+	}
+	
 	public RegisterNumber(string registerNumber)
 	{
 		// TODO: checks
@@ -14,11 +19,6 @@ public class RegisterNumber : ValueObject
 	}
 
 	public string Value { get; }
-
-	public override IEnumerable<object> GetAtomicValues()
-	{
-		yield return Value;
-	}
 
 	public override string ToString()
 	{

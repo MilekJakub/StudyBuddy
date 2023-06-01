@@ -1,3 +1,5 @@
-﻿namespace StudyBuddy.Application.Teams.Commands.AddMember;
+﻿using StudyBuddy.Shared.Application.Interfaces;
 
-public record AddMemberToTeamRequest(Guid TeamId, Guid MemberId);
+namespace StudyBuddy.Application.Teams.Commands.AddMember;
+
+public record AddMemberToTeamRequest(Guid TeamId, Guid MemberId) : ICommand;

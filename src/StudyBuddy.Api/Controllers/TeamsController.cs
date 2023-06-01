@@ -10,6 +10,7 @@ using StudyBuddy.Application.Teams.Commands.KickMember;
 using StudyBuddy.Application.Teams.Queries;
 using StudyBuddy.Application.Teams.Queries.GetAll;
 using StudyBuddy.Application.Teams.Queries.GetById;
+using StudyBuddy.Application.Teams.Queries.GetProjects;
 using StudyBuddy.Shared.API;
 
 namespace StudyBuddy.Api.Controllers;

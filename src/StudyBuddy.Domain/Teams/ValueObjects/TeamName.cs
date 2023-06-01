@@ -2,8 +2,13 @@ using StudyBuddy.Shared.Domain;
 
 namespace StudyBuddy.Domain.Teams.ValueObjects;
 
-public class TeamName : ValueObject
+public sealed record TeamName : IValueObject
 {
+	private TeamName()
+	{
+		// For Entity Framework
+	}
+	
 	public TeamName(string name)
 	{
 		// TODO: checks
@@ -11,11 +16,6 @@ public class TeamName : ValueObject
 	}
 
 	public string Value { get; }
-
-	public override IEnumerable<object> GetAtomicValues()
-	{
-		yield return Value;
-	}
 
 	public override string ToString()
 	{

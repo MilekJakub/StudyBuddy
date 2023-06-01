@@ -3,4 +3,4 @@ using StudyBuddy.Shared.Domain.Interfaces;
 
 namespace StudyBuddy.Domain.Teams.Events;
 
-public record MembershipAddedToTeamEvent(Team Team, Membership Membership) : IDomainEvent;
+public record MemberAddedToTeamEvent(Team Team, Member Member) : IDomainEvent;
