@@ -1,4 +1,4 @@
-# StuddyBuddy
+# Study Buddy
 
 ## Student project management application.
 

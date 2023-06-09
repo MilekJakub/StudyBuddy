@@ -1,12 +1,9 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using StudyBuddy.Application.Users.Commands.ChangeEmail;
-using StudyBuddy.Application.Users.Commands.ChangeFirstname;
-using StudyBuddy.Application.Users.Commands.ChangeLastname;
 using StudyBuddy.Application.Users.Commands.ChangePassword;
-using StudyBuddy.Application.Users.Commands.ChangeRegisterNumber;
-using StudyBuddy.Application.Users.Commands.ChangeUsername;
 using StudyBuddy.Application.Users.Commands.Delete;
+using StudyBuddy.Application.Users.Commands.Update;
 using StudyBuddy.Application.Users.Queries.GetAll;
 using StudyBuddy.Application.Users.Queries.GetById;
 using StudyBuddy.Shared.API;
@@ -21,15 +18,15 @@ public sealed class UsersController : ApiController
     {
     }
 
-    [HttpGet("users")]
-    public async Task<IResult> GetUserById([FromBody] GetUserByIdRequest request, CancellationToken cancellationToken)
+    [HttpGet("users/{Id}")]
+    public async Task<IResult> GetUserById([FromRoute] GetUserByIdRequest request, CancellationToken cancellationToken)
     {
         var userDto = await Sender.Send(request, cancellationToken);
         return Results.Ok(userDto);
     }
     
     [HttpGet("users/all")]
-    public async Task<IResult> GetAllUsers([FromBody] GetAllUsersRequest request, CancellationToken cancellationToken)
+    public async Task<IResult> GetAllUsers([FromRoute] GetAllUsersRequest request, CancellationToken cancellationToken)
     {
         var userDtos = await Sender.Send(request, cancellationToken);
         return Results.Ok(userDtos);
@@ -40,13 +37,6 @@ public sealed class UsersController : ApiController
     {
         await Sender.Send(request, cancellationToken);
         return Results.NoContent();
-    }
-    
-    [HttpPut("users/username")]
-    public async Task<IResult> ChangeUsername([FromBody] ChangeUsernameRequest request, CancellationToken cancellationToken)
-    {
-       await Sender.Send(request, cancellationToken);
-       return Results.Ok();
     }
     
     [HttpPut("users/email")]
@@ -63,22 +53,9 @@ public sealed class UsersController : ApiController
        return Results.Ok();
     }
     
-    [HttpPut("users/firstname")]
-    public async Task<IResult> ChangeFirstname([FromBody] ChangeFirstnameRequest request, CancellationToken cancellationToken)
-    {
-       await Sender.Send(request, cancellationToken);
-       return Results.Ok();
-    }
     
-    [HttpPut("users/lastname")]
-    public async Task<IResult> ChangeLastname([FromBody] ChangeLastnameRequest request, CancellationToken cancellationToken)
-    {
-       await Sender.Send(request, cancellationToken);
-       return Results.Ok();
-    }
-    
-    [HttpPut("users/register-number")]
-    public async Task<IResult> ChangeRegisterNumber([FromBody] ChangeRegisterNumberRequest request, CancellationToken cancellationToken)
+    [HttpPut("users")]
+    public async Task<IResult> ChangeFirstname([FromBody] UpdateUserRequest request, CancellationToken cancellationToken)
     {
        await Sender.Send(request, cancellationToken);
        return Results.Ok();

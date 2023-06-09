@@ -3,4 +3,7 @@ using StudyBuddy.Shared.Domain.Interfaces;
 
 namespace StudyBuddy.Domain.Teams.Events;
 
-public record TeamNameChangedEvent(Team Team, TeamName Name) : IDomainEvent;
+public record TeamNameChangedEvent(
+    Team Team,
+    TeamName Name)
+    : IDomainEvent;

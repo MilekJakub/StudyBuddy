@@ -1,26 +1,24 @@
 using StudyBuddy.Shared.Domain;
+using StudyBuddy.Shared.Domain.Interfaces;
 
 namespace StudyBuddy.Domain.Projects.ValueObjects;
 
 public sealed record ProjectRequirement : IValueObject
 {
-	private ProjectRequirement()
-	{
-		// For Entity Framework	
-	}
-	
 	public ProjectRequirement(string requirement, string description)
 	{
 		// TODO: checks
-		Name = requirement;
+		Requirement = requirement;
 		Description = description;
 	}
 
-	public string Name { get; }
-	public string Description { get; }
+	public string Requirement { get; init; }
+	public string Description { get; init; }
 	
-	public override string ToString()
+	public override string ToString() => Requirement;
+
+	private ProjectRequirement()
 	{
-		return Name;
+		// For Entity Framework	
 	}
 }

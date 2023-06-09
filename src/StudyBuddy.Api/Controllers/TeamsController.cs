@@ -2,14 +2,13 @@
 using Microsoft.AspNetCore.Mvc;
 using StudyBuddy.Application.Teams.Commands.AddMember;
 using StudyBuddy.Application.Teams.Commands.ChangeLeader;
-using StudyBuddy.Application.Teams.Commands.ChangeName;
 using StudyBuddy.Application.Teams.Commands.Create;
 using StudyBuddy.Application.Teams.Commands.Delete;
-using StudyBuddy.Application.Teams.Commands.GetMembers;
 using StudyBuddy.Application.Teams.Commands.KickMember;
-using StudyBuddy.Application.Teams.Queries;
+using StudyBuddy.Application.Teams.Commands.Update;
 using StudyBuddy.Application.Teams.Queries.GetAll;
 using StudyBuddy.Application.Teams.Queries.GetById;
+using StudyBuddy.Application.Teams.Queries.GetMembers;
 using StudyBuddy.Application.Teams.Queries.GetProjects;
 using StudyBuddy.Shared.API;
 
@@ -23,15 +22,15 @@ public sealed class TeamsController : ApiController
     {
     }
     
-    [HttpGet("teams")]
-    public async Task<IResult> GetTeamById([FromBody] GetTeamByIdRequest request, CancellationToken cancellationToken)
+    [HttpGet("teams/{Id}")]
+    public async Task<IResult> GetTeamById([FromRoute] GetTeamByIdRequest request, CancellationToken cancellationToken)
     {
         var teamDto = await Sender.Send(request, cancellationToken);
         return Results.Ok(teamDto);
     }
     
     [HttpGet("teams/all")]
-    public async Task<IResult> GetAllTeams([FromBody] GetAllTeamsRequest request, CancellationToken cancellationToken)
+    public async Task<IResult> GetAllTeams([FromRoute] GetAllTeamsRequest request, CancellationToken cancellationToken)
     {
         var teamDtos = await Sender.Send(request, cancellationToken);
         return Results.Ok(teamDtos);
@@ -41,7 +40,7 @@ public sealed class TeamsController : ApiController
     public async Task<IResult> CreateTeam([FromBody] CreateTeamRequest request, CancellationToken cancellationToken)
     {
         await Sender.Send(request, cancellationToken);
-        return Results.Created(request.Id.ToString(), null);
+        return Results.Created($"{request.GetId}", null);
     }
     
     [HttpDelete("teams")]
@@ -51,6 +50,12 @@ public sealed class TeamsController : ApiController
         return Results.NoContent();
     }
     
+    [HttpPut("teams")]
+    public async Task<IResult> ChangeName(UpdateTeamRequest request, CancellationToken cancellationToken)
+    {
+        await Sender.Send(request, cancellationToken);
+        return Results.Ok();
+    }
     
     [HttpPut("teams/leader")]
     public async Task<IResult> ChangeLeader(ChangeTeamLeaderRequest request, CancellationToken cancellationToken)
@@ -59,15 +64,8 @@ public sealed class TeamsController : ApiController
         return Results.Ok();
     }
 
-    [HttpPut("teams/name")]
-    public async Task<IResult> ChangeName(ChangeTeamNameRequest request, CancellationToken cancellationToken)
-    {
-        await Sender.Send(request, cancellationToken);
-        return Results.Ok();
-    }
-
-    [HttpGet("teams/members")]
-    public async Task<IResult> GetMembers(GetTeamMembersRequest request, CancellationToken cancellationToken)
+    [HttpGet("teams/members/{TeamId}")]
+    public async Task<IResult> GetMembers([FromRoute] GetTeamMembersRequest request, CancellationToken cancellationToken)
     {
         var memberDtos = await Sender.Send(request, cancellationToken);
         return Results.Ok(memberDtos);
@@ -87,8 +85,8 @@ public sealed class TeamsController : ApiController
         return Results.Ok();
     }
 
-    [HttpGet("teams/projects")]
-    public async Task<IResult> GetProjects([FromBody] GetProjectsRequest request, CancellationToken cancellationToken)
+    [HttpGet("teams/projects/{TeamId}")]
+    public async Task<IResult> GetProjects([FromRoute] GetTeamProjectsRequest request, CancellationToken cancellationToken)
     {
         var projectDtos = await Sender.Send(request, cancellationToken);
         return Results.Ok(projectDtos);

@@ -3,4 +3,5 @@ using StudyBuddy.Shared.Application.Interfaces;
 
 namespace StudyBuddy.Application.Projects.Queries.GetTechnologies;
 
-public record GetProjectTechnologiesRequest(Guid ProjectId) : IQuery<ICollection<ProjectTechnologyDto>>;
+public record GetProjectTechnologiesRequest(Guid ProjectId)
+    : IQuery<IEnumerable<ProjectTechnologyDto>>;

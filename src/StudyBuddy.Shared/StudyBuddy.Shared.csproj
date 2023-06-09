@@ -15,7 +15,6 @@
 
   <ItemGroup>
     <Folder Include="Exceptions\Projects\BadRequest\" />
-    <Folder Include="Exceptions\Users\NotFound\" />
   </ItemGroup>
 
 </Project>

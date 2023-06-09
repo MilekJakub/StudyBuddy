@@ -7,6 +7,6 @@ public record ProjectDto(
     IEnumerable<ProjectTechnologyDto> Technologies,
     IEnumerable<ProgrammingLanguageDto> Languages,
     string Difficulty,
-    DateTime EstimatedTimeToFinish,
+    TimeSpan EstimatedTimeToFinish,
     DateTime Deadline,
     string State);

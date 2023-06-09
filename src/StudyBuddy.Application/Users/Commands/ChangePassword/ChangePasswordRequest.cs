@@ -2,4 +2,4 @@
 
 namespace StudyBuddy.Application.Users.Commands.ChangePassword;
 
-public record ChangePasswordRequest(string Password) : ICommand;
+public record ChangePasswordRequest(Guid UserId, string Password) : ICommand;

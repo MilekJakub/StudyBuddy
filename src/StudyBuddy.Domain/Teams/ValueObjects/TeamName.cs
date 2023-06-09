@@ -1,4 +1,5 @@
 using StudyBuddy.Shared.Domain;
+using StudyBuddy.Shared.Domain.Interfaces;
 
 namespace StudyBuddy.Domain.Teams.ValueObjects;
 

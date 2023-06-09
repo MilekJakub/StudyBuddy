@@ -1,11 +1,11 @@
 using StudyBuddy.Domain.Projects.ValueObjects;
-using StudyBuddy.Domain.Projects.Enums;
 using StudyBuddy.Domain.Projects.Enums.ProjectDifficulty;
 using StudyBuddy.Domain.Projects.Enums.ProjectState;
 using StudyBuddy.Shared.Domain;
 using StudyBuddy.Domain.Teams;
 using StudyBuddy.Domain.Projects.Events;
 using StudyBuddy.Domain.Teams.ValueObjects;
+using StudyBuddy.Domain.Users;
 using StudyBuddy.Shared.Exceptions.Projects.NotFound;
 
 namespace StudyBuddy.Domain.Projects;
@@ -16,57 +16,65 @@ public class Project : Entity
 	private readonly List<ProjectTechnology> _technologies = new();
 	private readonly List<ProgrammingLanguage> _languages = new();
 
-	private Project()
-	{
-		// For Entity Framework	
-	}
-	
 	public Project(
 		ProjectId id,
 		ProjectTopic topic,
 		ProjectDescription description,
-		ProjectDifficultyId difficultyId,
 		ProjectDifficulty difficulty,
-		DateTime estimatedTimeToFinish,
-		DateTime deadline,
-		ProjectStateId stateId,
+		EstimatedTime estimatedTimeToFinish,
+		Deadline deadline,
 		ProjectState state,
-		Team team)
+		User creator,
+		Team? team = null)
 	{
 		Id = id;
 		Topic = topic;
 		Description = description;
 		EstimatedTimeToFinish = estimatedTimeToFinish;
 		Deadline = deadline;
-		TeamId = team.Id;
-		Team = team;
-		
-		ProjectDifficultyId = difficultyId;
+		ProjectDifficultyId = difficulty.Id;
 		ProjectDifficulty = difficulty;
-		
-		ProjectStateId = stateId;
+		ProjectStateId = state.Id;
 		ProjectState = state;
+
+		if (team is null)
+		{
+			var defaultTeam = new Team(
+				id: new TeamId(Guid.NewGuid()),
+				description: new TeamDescription("Write something amazing about your team!"),
+				name: new TeamName($"{id}"),
+				teamFounder: creator);
+		
+			TeamId = defaultTeam.Id;
+			Team = defaultTeam;
+		}
+		else
+		{
+			TeamId = team.Id;
+			Team = team;
+		}
 	}
 
-	public ProjectId Id { get; init; }
+	public ProjectId Id { get; private set; }
 	public ProjectTopic Topic { get; private set; }
 	public ProjectDescription Description { get; private set; }
-	public DateTime EstimatedTimeToFinish { get; private set; }
-	public DateTime Deadline { get; private set; }
+	public EstimatedTime EstimatedTimeToFinish { get; private set; }
+	public Deadline Deadline { get; private set; }
 	
-	public IReadOnlyCollection<ProjectRequirement> Requirements => _requirements;
-	public IReadOnlyCollection<ProjectTechnology> Technologies => _technologies;
-	public IReadOnlyCollection<ProgrammingLanguage> ProgrammingLanguages => _languages;
+	public IReadOnlyCollection<ProjectRequirement> Requirements
+		=> _requirements;
+	public IReadOnlyCollection<ProjectTechnology> Technologies
+		=> _technologies;
+	public IReadOnlyCollection<ProgrammingLanguage> ProgrammingLanguages
+		=> _languages;
 	
 	public TeamId TeamId { get; private set; }
 	public Team Team { get; private set; }
-	
 	public ProjectDifficultyId ProjectDifficultyId { get; private set; }
 	public ProjectDifficulty ProjectDifficulty { get; private set; }
-	
 	public ProjectStateId ProjectStateId { get; private set; }
 	public ProjectState ProjectState { get; private set; }
-	
+
 	public void ChangeTopic(ProjectTopic topic)
 	{
 		Topic = topic;
@@ -85,7 +93,7 @@ public class Project : Entity
 		AddEvent(new RequirementAddedToProjectEvent(this, requirement));
 	}
 
-	public void AddRequirements(ICollection<ProjectRequirement> requirements)
+	public void AddRequirements(IEnumerable<ProjectRequirement> requirements)
 	{
 		foreach(var requirement in requirements)
 		{
@@ -101,7 +109,7 @@ public class Project : Entity
 		_requirements.Remove(requirement);
 	}
 
-	public void RemoveRequirements(ICollection<string> names)
+	public void RemoveRequirements(IEnumerable<string> names)
 	{
 		foreach(var name in names)
 		{
@@ -115,7 +123,7 @@ public class Project : Entity
 		AddEvent(new TechnologyAddedToProjectEvent(this, technology));
 	}
 
-	public void AddTechnologies(ICollection<ProjectTechnology> technologies)
+	public void AddTechnologies(IEnumerable<ProjectTechnology> technologies)
 	{
 		foreach(var technology in technologies)
 		{
@@ -130,7 +138,7 @@ public class Project : Entity
 		_technologies.Remove(technology);
 	}
 
-	public void RemoveTechnologies(ICollection<string> names)
+	public void RemoveTechnologies(IEnumerable<string> names)
 	{
 		foreach(var name in names)
 		{
@@ -144,7 +152,7 @@ public class Project : Entity
 		AddEvent(new ProgrammingLanguageAddedToProjectEvent(this, language));
 	}
 
-	public void AddProgrammingLanguages(ICollection<ProgrammingLanguage> languages)
+	public void AddProgrammingLanguages(IEnumerable<ProgrammingLanguage> languages)
 	{
 		foreach(var language in languages)
 		{
@@ -160,7 +168,7 @@ public class Project : Entity
 		_languages.Remove(language);
 	}
 
-	public void RemoveProgrammingLanguages(ICollection<string> names)
+	public void RemoveProgrammingLanguages(IEnumerable<string> names)
 	{
 		foreach(var name in names)
 		{
@@ -168,19 +176,20 @@ public class Project : Entity
 		}
 	}
 
-	public void ChangeDifficulty(ProjectDifficultyId difficultyId)
+	public void ChangeDifficulty(ProjectDifficulty difficulty)
 	{
-		ProjectDifficultyId = difficultyId;
-		AddEvent(new ProjectDifficultyChangedEvent(this, difficultyId));
+		ProjectDifficultyId = difficulty.Id;
+		ProjectDifficulty = difficulty;
+		AddEvent(new ProjectDifficultyChangedEvent(this, difficulty));
 	}
 
-	public void ChangeEstimatedTimeToFinish(DateTime time)
+	public void ChangeEstimatedTimeToFinish(EstimatedTime time)
 	{
 		EstimatedTimeToFinish = time;
 		AddEvent(new ProjectEstimatedTimeToFinishChangedEvent(this, time));
 	}
 
-	public void ChangeDeadline(DateTime deadline)
+	public void ChangeDeadline(Deadline deadline)
 	{
 		Deadline = deadline;
 		AddEvent(new ProjectDeadlineChangedEvent(this, deadline));
@@ -188,6 +197,7 @@ public class Project : Entity
 
 	public void ChangeState(ProjectState state)
 	{
+		ProjectStateId = state.Id;
 		ProjectState = state;
 		AddEvent(new ProjectStateChangedEvent(this, state));
 	}
@@ -196,7 +206,7 @@ public class Project : Entity
 	{
 		foreach(var requirement in Requirements)
 		{
-			if(requirement.Name == name)
+			if(requirement.Requirement == name)
 				return requirement;
 		}
 
@@ -223,5 +233,10 @@ public class Project : Entity
 		}
 
 		throw new LanguageNotFoundException(name);
+	}
+	
+	private Project()
+	{
+		// For Entity Framework	
 	}
 }

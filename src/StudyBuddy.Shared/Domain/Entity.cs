@@ -2,7 +2,7 @@ using StudyBuddy.Shared.Domain.Interfaces;
 
 namespace StudyBuddy.Shared.Domain;
 
-public abstract class Entity
+public abstract class Entity : IEntity
 {
 	private readonly List<IDomainEvent> _events = new();
     

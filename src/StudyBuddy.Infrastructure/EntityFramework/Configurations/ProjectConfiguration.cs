@@ -19,13 +19,13 @@ public class ProjectConfiguration
 {
     public void Configure(EntityTypeBuilder<Project> builder)
     {
-        builder.HasKey(t => t.Id);
-        
-        builder
-	        .Property(u => u.Id)
-	        .HasConversion(
-		        id => id.Value,
-		        id => new ProjectId(id));
+	    builder.HasKey(t => t.Id);
+
+	    builder
+		    .Property(u => u.Id)
+		    .HasConversion(
+			    id => id.Value,
+			    id => new ProjectId(id));
         
         builder
 			.Property(p => p.Topic)
@@ -46,22 +46,20 @@ public class ProjectConfiguration
 		builder
 			.Property(p => p.ProjectDifficultyId)
 			.HasConversion<byte>();
-		
-		builder
-			.Property(p => p.ProjectDifficulty)
-			.HasConversion(
-				difficulty => difficulty.ToString(),
-				difficulty => new ProjectDifficulty(difficulty))
-			.HasColumnName("ProjectDifficulty")
-			.IsRequired();
 
 		builder
 			.Property(p => p.EstimatedTimeToFinish)
-			.HasColumnName("EstimatedTimeToFinish")
+			.HasConversion(
+				estimatedTime => estimatedTime.Value.Ticks,
+				estimatedTime => new EstimatedTime(new TimeSpan(estimatedTime)))
+			.HasColumnName("EstimatedTime")
 			.IsRequired();
 		
 		builder
 			.Property(p => p.Deadline)
+			.HasConversion(
+				deadline => deadline.Value,
+				deadline => new Deadline(deadline))
 			.HasColumnName("Deadline")
 			.IsRequired();
 		
@@ -70,26 +68,8 @@ public class ProjectConfiguration
 			.HasConversion<byte>();
 		
 		builder
-			.Property(p => p.ProjectState)
-			.HasConversion(
-				state => state.ToString(),
-				state => new ProjectState(state))
-			.HasColumnName("ProjectState")
-			.IsRequired();
-
-		builder
 			.HasOne(p => p.Team)
 			.WithMany(t => t.Projects);
-
-		// builder
-		// 	.HasOne(p => p.ProjectDifficulty)
-		// 	.WithMany(pd => pd.Projects)
-		// 	.HasForeignKey(p => p.ProjectDifficultyId);
-
-		// builder
-		// 	.HasOne(p => p.ProjectState)
-		// 	.WithMany(pd => pd.Projects)
-		// 	.HasForeignKey(p => p.ProjectStateId);
 
 		builder.HasMany(p => p.Requirements);
 		builder.HasMany(p => p.Technologies);
@@ -101,7 +81,7 @@ public class ProjectConfiguration
     public void Configure(EntityTypeBuilder<ProjectRequirement> builder)
     {
 	    builder.Property<Guid>("Id");
-	    builder.Property(pr => pr.Name);
+	    builder.Property(pr => pr.Requirement);
 	    builder.Property(pr => pr.Description);
 	    builder.ToTable("ProjectRequirements");
     }

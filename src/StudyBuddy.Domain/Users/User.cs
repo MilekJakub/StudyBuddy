@@ -7,12 +7,7 @@ namespace StudyBuddy.Domain.Users;
 
 public sealed class User : Entity
 {
-	private List<Member> _memberships = new();
-	
-	private User()
-	{
-		// For Entity Framework
-	}
+	private readonly List<Membership> _memberships = new();
 	
     public User(
 		UserId id,
@@ -38,7 +33,7 @@ public sealed class User : Entity
         AddEvent(new UserRegisteredEvent(this));
     }
 
-    public UserId Id { get; init; }
+    public UserId Id { get; private set; }
 	public Username Username { get; private set; }
     public Email Email { get; private set; }
     public PasswordHash PasswordHash { get; private set; }
@@ -47,5 +42,40 @@ public sealed class User : Entity
 	public Lastname Lastname { get; private set; }
     public RegisterNumber RegisterNumber { get; private set; }
     public DateTime CreatedAt { get; private set; }
-    public IReadOnlyCollection<Member> Memberships => _memberships;
+    public IReadOnlyCollection<Membership> Memberships => _memberships;
+
+    public void ChangeEmail(Email email)
+    {
+	    Email = email;
+    }
+
+    public void ChangeFirstname(Firstname firstname)
+    {
+	    Firstname = firstname;
+    }
+
+    public void ChangeLastname(Lastname lastname)
+    {
+	    Lastname = lastname;
+    }
+
+    public void ChangePassword(PasswordHash hash)
+    {
+	    PasswordHash = hash;
+    }
+
+    public void ChangeRegisterNumber(RegisterNumber registerNumber)
+    {
+	    RegisterNumber = registerNumber;
+    }
+
+    public void ChangeUsername(Username username)
+    {
+	    Username = username;
+    }
+
+    private User()
+	{
+		// For Entity Framework
+	}
 }

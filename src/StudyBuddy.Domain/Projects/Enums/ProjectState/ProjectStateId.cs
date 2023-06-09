@@ -1,4 +1,4 @@
-namespace StudyBuddy.Domain.Projects.Enums;
+namespace StudyBuddy.Domain.Projects.Enums.ProjectState;
 
 public enum ProjectStateId
 {

@@ -24,29 +24,27 @@ public static class Mapper
 
     public static TeamDto TeamDto(Team team)
     {
-        var leader = MemberDto(team.Leader);
-        var members = team.Members.Select(MemberDto);
+        var members = team.Memberships.Select(MemberDto);
         var projects = team.Projects.Select(ProjectDto);
 
         return new TeamDto(
             team.Id.Value,
             team.Name.ToString(),
-            leader,
             members,
             projects);
     }
 
-    public static MemberDto MemberDto(Member member)
+    public static MemberDto MemberDto(Membership membership)
     {
         return new MemberDto(
-            member.Id.Value,
-            member.User.Username.ToString(),
-            member.User.Email.ToString(),
-            member.User.Firstname.ToString(),
-            member.User.Lastname.ToString(),
-            member.User.RegisterNumber.ToString(),
-            member.Role.ToString(),
-            member.JoinDate);
+            membership.Id.Value,
+            membership.User.Username.ToString(),
+            membership.User.Email.ToString(),
+            membership.User.Firstname.ToString(),
+            membership.User.Lastname.ToString(),
+            membership.User.RegisterNumber.ToString(),
+            membership.Role.ToString(),
+            membership.JoinDate);
     }
 
     public static ProjectDto ProjectDto(Project project)
@@ -62,23 +60,17 @@ public static class Mapper
             technologies,
             languages,
             project.ProjectDifficultyId.ToString(),
-            project.EstimatedTimeToFinish,
-            project.Deadline,
+            project.EstimatedTimeToFinish.Value,
+            project.Deadline.Value,
             project.ProjectState.ToString());
     }
 
     public static ProjectRequirementDto ProjectRequirementDto(ProjectRequirement projectRequirement)
-    {
-        return new ProjectRequirementDto(projectRequirement.Name, projectRequirement.Description);
-    }
+        => new(projectRequirement.Requirement, projectRequirement.Description);
 
     public static ProjectTechnologyDto ProjectTechnologyDto(ProjectTechnology projectTechnology)
-    {
-        return new ProjectTechnologyDto(projectTechnology.Name, projectTechnology.Description, projectTechnology.Version);
-    }
+        => new(projectTechnology.Name, projectTechnology.Description, projectTechnology.Version);
 
     public static ProgrammingLanguageDto ProjectLanguageDto(ProgrammingLanguage programmingLanguage)
-    {
-        return new ProgrammingLanguageDto(programmingLanguage.Name, programmingLanguage.Version);
-    }
+        => new(programmingLanguage.Name, programmingLanguage.Version);
 }

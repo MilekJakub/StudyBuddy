@@ -2,35 +2,40 @@ using StudyBuddy.Domain.Projects;
 using StudyBuddy.Domain.Teams.Entities;
 using StudyBuddy.Domain.Teams.Events;
 using StudyBuddy.Domain.Teams.ValueObjects;
+using StudyBuddy.Domain.Users;
+using StudyBuddy.Domain.Users.ValueObjects;
 using StudyBuddy.Shared.Domain;
+using StudyBuddy.Shared.Exceptions.Teams.BadRequest;
 using StudyBuddy.Shared.Exceptions.Teams.NotFound;
 
 namespace StudyBuddy.Domain.Teams;
 
 public class Team : Entity
 {
-	private readonly List<Member> _members = new();
+	private readonly List<Membership> _memberships = new();
 	private readonly List<Project> _projects = new();
-
-	private Team()
-	{
-		// For Entity Framework
-	}
 	
-	public Team(
-		TeamId id,
-		TeamName name,
-		Member leader)
+	public Team(TeamId id, TeamName name, TeamDescription description, User teamFounder)
 	{
 		Id = id;
 		Name = name;
-		_members.Add(leader);
+		Description = description;
+
+		var leader =
+			new Membership(
+			id: new MembershipId(Guid.NewGuid()),
+			team: this,
+			user: teamFounder,
+			role: new ProjectRole("Leader"),
+			joinDate: DateTime.UtcNow);
+
+		_memberships.Add(leader);
 	}
 
-	public TeamId Id { get; init; }
+	public TeamId Id { get; private set; }
 	public TeamName Name { get; private set; }
-	public Member Leader => _members.Single(m => m.Role.Value == "Leader");
-	public IReadOnlyCollection<Member> Members => _members;
+	public TeamDescription Description { get; private set; }
+	public IReadOnlyCollection<Membership> Memberships => _memberships;
 	public IReadOnlyCollection<Project> Projects => _projects;
 
 	public void AddProject(Project project)
@@ -45,34 +50,52 @@ public class Team : Entity
 		AddEvent(new TeamNameChangedEvent(this, name));
 	}
 	
-	public void ChangeLeader(Member leader, MemberRole previousLeaderRole)
+	public void ChangeLeader(
+		MembershipId newLeaderId,
+		ProjectRole roleForPreviousLeader)
 	{
-		Leader.ChangeRole(previousLeaderRole);
-		leader.ChangeRole(new MemberRole("Leader"));
-		AddEvent(new TeamLeaderChangedEvent(this, leader));
+		var currentLeader = GetLeader();
+		var newLeader = GetMembership(newLeaderId);
+		
+		currentLeader.ChangeRole(roleForPreviousLeader);
+		newLeader.ChangeRole(new ProjectRole("Leader"));
+		
+		AddEvent(new TeamLeaderChangedEvent(this, currentLeader));
 	}
 
-	public void AddMember(Member member)
+	public void AddMember(Membership membership)
 	{
-		_members.Add(member);
-		AddEvent(new MemberAddedToTeamEvent(this, member));
+		_memberships.Add(membership);
+		AddEvent(new MemberAddedToTeamEvent(this, membership));
 	}
 
-	public void KickMember(MemberId id)
+	public void KickMember(MembershipId id)
 	{
-		var member = GetMember(id);
-		_members.Remove(member);
+		var member = GetMembership(id);
+		_memberships.Remove(member);
 		AddEvent(new MemberKickedFromProjectEvent(this, member));
 	}
 
-	private Member GetMember(MemberId id)
+	private Membership GetMembership(MembershipId id)
 	{
-		foreach(var members in _members)
+		var member = _memberships.SingleOrDefault(m => m.Id == id);
+		return member ?? throw new MembershipNotFoundException(id.ToString());
+	}
+
+	public Membership GetLeader()
+	{
+		var leader = _memberships.SingleOrDefault(m => m.Role.Value == "Leader");
+
+		if (leader is null)
 		{
-			if(members.Id.Equals(id))
-				return members;
+			throw new LeaderNotFoundException();
 		}
 
-		throw new MemberNotFoundException(id.ToString());
+		return leader;
+	}
+
+	private Team()
+	{
+		// For Entity Framework
 	}
 }

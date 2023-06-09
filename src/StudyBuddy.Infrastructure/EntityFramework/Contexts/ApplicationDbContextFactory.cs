@@ -4,7 +4,8 @@ using Microsoft.Extensions.Configuration;
 
 namespace StudyBuddy.Infrastructure.EntityFramework.Contexts;
 
-public class ApplicationDbContextFactory : IDesignTimeDbContextFactory<ApplicationDbContext>
+public class ApplicationDbContextFactory
+    : IDesignTimeDbContextFactory<ApplicationDbContext>
 {
     public ApplicationDbContext CreateDbContext(string[] args)
     {

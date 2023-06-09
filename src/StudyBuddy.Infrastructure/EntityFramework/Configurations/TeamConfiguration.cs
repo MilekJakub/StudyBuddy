@@ -9,31 +9,37 @@ namespace StudyBuddy.Infrastructure.EntityFramework.Configurations;
 
 public class TeamConfiguration
 	: IEntityTypeConfiguration<Team>, 
-	  IEntityTypeConfiguration<Member>
+	  IEntityTypeConfiguration<Membership>
 {
     public void Configure(EntityTypeBuilder<Team> builder)
     {
         builder.HasKey(t => t.Id);
-
-        builder
-            .Property(u => u.Id)
-            .HasConversion(
-                id => id.Value,
-                id => new TeamId(id))
-            .HasColumnName("Id");
         
-        builder
+	    builder
+		    .Property(t => t.Id)
+		    .HasConversion(
+			    id => id.Value,
+			    id => new TeamId(id));
+
+	    builder
 			.Property(t => t.Name)
 			.HasConversion(
 				name => name.ToString(),
 				name => new TeamName(name))
 			.HasColumnName("Name");
-
+   
+        builder
+	        .Property(t => t.Description)
+	        .HasConversion(
+		        description => description.Value,
+		        description => new TeamDescription(description))
+	        .HasColumnName("Description");
+        
 		builder
-			.HasMany(t => t.Members)
+			.HasMany(t => t.Memberships)
 			.WithOne(m => m.Team)
 			.HasForeignKey(m => m.TeamId);
-
+		
 		builder
 			.HasMany(t => t.Projects)
 			.WithOne(p => p.Team)
@@ -42,38 +48,38 @@ public class TeamConfiguration
         builder.ToTable("Teams");
     }
 
-    public void Configure(EntityTypeBuilder<Member> builder)
+    public void Configure(EntityTypeBuilder<Membership> builder)
     {
 	    builder.HasKey(m => m.Id);
-
+	    
 	    builder
 		    .Property(u => u.Id)
 		    .HasConversion(
 			    id => id.Value,
-			    id => new MemberId(id));
+			    id => new MembershipId(id));
 	    
 	    builder
 		    .Property(m => m.Role)
 		    .HasConversion(
 			    role => role.ToString(),
-			    role => new MemberRole(role))
+			    role => new ProjectRole(role))
 		    .HasColumnName("Role")
 		    .IsRequired();
-
+	    
 	    builder.Property(m => m.JoinDate)
 		    .HasColumnName("JoinDate")
 		    .IsRequired();
 
 	    builder
 		    .HasOne(m => m.Team)
-		    .WithMany(t => t.Members)
+		    .WithMany(t => t.Memberships)
 		    .HasForeignKey(m => m.TeamId);
-
+	    
 	    builder
 		    .HasOne(m => m.User)
 		    .WithMany(u => u.Memberships)
 		    .HasForeignKey(m => m.UserId);
 	    
-	    builder.ToTable("Members");
+	    builder.ToTable("Memberships");
     }
 }

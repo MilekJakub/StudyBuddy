@@ -1,7 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using StudyBuddy.Domain.Projects;
-using StudyBuddy.Domain.Teams;
 using StudyBuddy.Domain.Users;
 using StudyBuddy.Domain.Users.ValueObjects;
 
@@ -13,16 +11,16 @@ public class ApplicationDbContextConfiguration
     public void Configure(EntityTypeBuilder<User> builder)
     {
         builder.HasKey(u => u.Id);
-
+        builder.HasIndex(u => u.Email).IsUnique();
+        builder.HasIndex(x => x.Username).IsUnique();
+        
         builder
             .Property(u => u.Id)
             .HasConversion(
                 id => id.Value,
-                id => new UserId(id));
+                id => new UserId(id))
+            .HasColumnName("Id");
         
-        builder.HasIndex(u => u.Email).IsUnique();
-        builder.HasIndex(x => x.Username).IsUnique();
-
         builder
             .Property(u => u.Username)
             .HasConversion(

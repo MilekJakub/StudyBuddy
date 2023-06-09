@@ -1,14 +1,10 @@
 using StudyBuddy.Shared.Domain;
+using StudyBuddy.Shared.Domain.Interfaces;
 
 namespace StudyBuddy.Domain.Projects.ValueObjects;
 
 public sealed record ProgrammingLanguage : IValueObject
 {
-	private ProgrammingLanguage()
-	{
-		// For Entity Framework
-	}
-	
 	public ProgrammingLanguage(string languageName, string? version)
 	{
 		// TODO: checks
@@ -16,11 +12,13 @@ public sealed record ProgrammingLanguage : IValueObject
 		Version = version;
 	}
 
-	public string Name { get; }
-	public string? Version { get; }
+	public string Name { get; init; }
+	public string? Version { get; init; }
 
-	public override string ToString()
+	public override string ToString() => Name;
+
+	private ProgrammingLanguage()
 	{
-		return Name;
+		// For Entity Framework
 	}
 }

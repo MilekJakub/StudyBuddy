@@ -3,4 +3,4 @@ using StudyBuddy.Shared.Domain.Interfaces;
 
 namespace StudyBuddy.Domain.Projects.Events;
 
-public record ProjectDeadlineChangedEvent(Project Project, DateTime Deadline) : IDomainEvent;
+public record ProjectDeadlineChangedEvent(Project Project, Deadline Deadline) : IDomainEvent;

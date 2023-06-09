@@ -4,4 +4,5 @@ namespace StudyBuddy.Application.Projects.Commands.RemoveRequirements;
 
 public record RemoveRequirementsFromProjectRequest(
     Guid ProjectId,
-    IEnumerable<string> Requirements) : ICommand;
+    IEnumerable<string> Requirements)
+    : ICommand;

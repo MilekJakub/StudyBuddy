@@ -113,22 +113,12 @@ namespace StudyBuddy.Infrastructure.EntityFramework.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("Description");
 
-                    b.Property<DateTime>("EstimatedTimeToFinish")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("EstimatedTimeToFinish");
-
-                    b.Property<string>("ProjectDifficulty")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("ProjectDifficulty");
+                    b.Property<long>("EstimatedTimeToFinish")
+                        .HasColumnType("bigint")
+                        .HasColumnName("EstimatedTime");
 
                     b.Property<byte>("ProjectDifficultyId")
                         .HasColumnType("tinyint");
-
-                    b.Property<string>("ProjectState")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("ProjectState");
 
                     b.Property<byte>("ProjectStateId")
                         .HasColumnType("tinyint");
@@ -185,12 +175,12 @@ namespace StudyBuddy.Infrastructure.EntityFramework.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<Guid?>("ProjectId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Requirement")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -226,7 +216,7 @@ namespace StudyBuddy.Infrastructure.EntityFramework.Migrations
                     b.ToTable("ProjectTechnologies", (string)null);
                 });
 
-            modelBuilder.Entity("StudyBuddy.Domain.Teams.Entities.Member", b =>
+            modelBuilder.Entity("StudyBuddy.Domain.Teams.Entities.Membership", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
@@ -252,14 +242,18 @@ namespace StudyBuddy.Infrastructure.EntityFramework.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Members", (string)null);
+                    b.ToTable("Memberships", (string)null);
                 });
 
             modelBuilder.Entity("StudyBuddy.Domain.Teams.Team", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("Id");
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Description");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -274,7 +268,8 @@ namespace StudyBuddy.Infrastructure.EntityFramework.Migrations
             modelBuilder.Entity("StudyBuddy.Domain.Users.User", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("Id");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2")
@@ -328,13 +323,13 @@ namespace StudyBuddy.Infrastructure.EntityFramework.Migrations
 
             modelBuilder.Entity("StudyBuddy.Domain.Projects.Project", b =>
                 {
-                    b.HasOne("StudyBuddy.Domain.Projects.Enums.ProjectDifficulty.ProjectDifficulty", null)
+                    b.HasOne("StudyBuddy.Domain.Projects.Enums.ProjectDifficulty.ProjectDifficulty", "ProjectDifficulty")
                         .WithMany("Projects")
                         .HasForeignKey("ProjectDifficultyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("StudyBuddy.Domain.Projects.Enums.ProjectState.ProjectState", null)
+                    b.HasOne("StudyBuddy.Domain.Projects.Enums.ProjectState.ProjectState", "ProjectState")
                         .WithMany("Projects")
                         .HasForeignKey("ProjectStateId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -345,6 +340,10 @@ namespace StudyBuddy.Infrastructure.EntityFramework.Migrations
                         .HasForeignKey("TeamId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("ProjectDifficulty");
+
+                    b.Navigation("ProjectState");
 
                     b.Navigation("Team");
                 });
@@ -370,10 +369,10 @@ namespace StudyBuddy.Infrastructure.EntityFramework.Migrations
                         .HasForeignKey("ProjectId");
                 });
 
-            modelBuilder.Entity("StudyBuddy.Domain.Teams.Entities.Member", b =>
+            modelBuilder.Entity("StudyBuddy.Domain.Teams.Entities.Membership", b =>
                 {
                     b.HasOne("StudyBuddy.Domain.Teams.Team", "Team")
-                        .WithMany("Members")
+                        .WithMany("Memberships")
                         .HasForeignKey("TeamId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -410,7 +409,7 @@ namespace StudyBuddy.Infrastructure.EntityFramework.Migrations
 
             modelBuilder.Entity("StudyBuddy.Domain.Teams.Team", b =>
                 {
-                    b.Navigation("Members");
+                    b.Navigation("Memberships");
 
                     b.Navigation("Projects");
                 });

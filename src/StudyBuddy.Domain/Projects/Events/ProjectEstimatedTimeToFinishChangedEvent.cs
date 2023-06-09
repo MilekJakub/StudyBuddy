@@ -3,4 +3,4 @@ using StudyBuddy.Shared.Domain.Interfaces;
 
 namespace StudyBuddy.Domain.Projects.Events;
 
-public record ProjectEstimatedTimeToFinishChangedEvent(Project Project, DateTime EstimatedTimeToFinish) : IDomainEvent;
+public record ProjectEstimatedTimeToFinishChangedEvent(Project Project, EstimatedTime EstimatedTimeToFinish) : IDomainEvent;

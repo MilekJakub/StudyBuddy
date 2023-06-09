@@ -3,11 +3,19 @@
 namespace StudyBuddy.Application.Users.Commands.Register;
 
 public record RegisterUserRequest(
-    Guid Id,
     string Username,
     string Email,
     string Password,
     string Role,
     string Firstname,
     string Lastname,
-    string RegisterNumber);
+    string RegisterNumber) : ICommand
+{
+    private Guid? _id;
+    private string? _token;
+
+    public Guid? GetId() => _id;
+    public void SetId(Guid id) => _id = id;
+    public string? GetToken() => _token;
+    public void SetToken(string token) => _token = token;
+}
