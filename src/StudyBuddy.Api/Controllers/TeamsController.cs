@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StudyBuddy.Application.Teams.Commands.AddMember;
 using StudyBuddy.Application.Teams.Commands.ChangeLeader;
@@ -16,6 +17,7 @@ namespace StudyBuddy.Api.Controllers;
 
 [ApiController]
 [Route("api")]
+[Authorize]
 public sealed class TeamsController : ApiController
 {
     public TeamsController(ISender sender) : base(sender)

@@ -1,5 +1,6 @@
 ﻿using StudyBuddy.Application.Services;
 using StudyBuddy.Domain.Repositories;
+using StudyBuddy.Domain.Teams.ValueObjects;
 using StudyBuddy.Shared.Application.Interfaces;
 
 namespace StudyBuddy.Application.Teams.Commands.KickMember;
@@ -23,10 +24,10 @@ public class KickTeamMemberRequestHandler
         CancellationToken cancellationToken)
     {
         var team = await _teamRepository
-            .GetByIdAsync(request.TeamId, cancellationToken);
+            .GetByIdAsync(new TeamId(request.TeamId), cancellationToken);
 
         var membership = await _teamRepository
-            .GetMembershipByIdAsync(request.MemberId);
+            .GetMembershipByIdAsync(new MembershipId(request.MemberId));
         
         team.KickMember(membership.Id);
         await _unitOfWork.SaveChangesAsync(cancellationToken);

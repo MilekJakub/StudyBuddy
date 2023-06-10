@@ -1,4 +1,5 @@
 ﻿using StudyBuddy.Application.Projects.DTOs;
+using StudyBuddy.Domain.Projects.ValueObjects;
 using StudyBuddy.Domain.Repositories;
 using StudyBuddy.Shared.Application.Interfaces;
 using StudyBuddy.Shared.Exceptions.Projects.NotFound;
@@ -21,7 +22,7 @@ public class GetProjectRequirementsRequestHandler
         CancellationToken cancellationToken)
     {
         var project = await _projectRepository
-            .GetByIdAsync(request.ProjectId, cancellationToken);
+            .GetByIdAsync(new ProjectId(request.ProjectId), cancellationToken);
         
         if (project is null)
         {

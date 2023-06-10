@@ -2,6 +2,8 @@
 using StudyBuddy.Domain.Repositories;
 using StudyBuddy.Domain.Teams;
 using StudyBuddy.Domain.Teams.Entities;
+using StudyBuddy.Domain.Teams.ValueObjects;
+using StudyBuddy.Domain.Users.ValueObjects;
 using StudyBuddy.Infrastructure.EntityFramework.Contexts;
 using StudyBuddy.Shared.Exceptions.Teams.NotFound;
 
@@ -18,40 +20,28 @@ public class TeamRepository : ITeamRepository
         _memberships = context.Memberships;
     }
     
-    public async Task<Team> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<Team?> GetByIdAsync(TeamId id, CancellationToken cancellationToken)
     {
-        var team = await _teams
-            .Include(t => t.Memberships)
+        return await _teams
+            .Include(t => t.Memberships).ThenInclude(m => m.User)
             .Include(t => t.Projects)
-            .SingleOrDefaultAsync(t => t.Id.Value == id, cancellationToken);
-
-        if (team is null)
-        {
-            throw new TeamNotFoundException(id.ToString());
-        }
-
-        return team;
+            .SingleOrDefaultAsync(t => t.Id == id, cancellationToken);
     }
 
     public async Task<IEnumerable<Team>> GetAll(CancellationToken cancellationToken = default)
     {
         return await _teams
-            .Include(t => t.Memberships)
+            .Include(t => t.Memberships).ThenInclude(m => m.User)
             .Include(t => t.Projects)
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<Membership> GetMembershipByIdAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<Membership?> GetMembershipByIdAsync(MembershipId id, CancellationToken cancellationToken)
     {
-        var membership = await _memberships
-            .SingleOrDefaultAsync(m => m.Id.Value == id, cancellationToken);
-
-        if (membership is null)
-        {
-            throw new MembershipNotFoundException(id.ToString());
-        }
-
-        return membership;
+        return await _memberships
+            .Include(m => m.User)
+            .Include(m => m.Team)
+            .SingleOrDefaultAsync(m => m.Id == id, cancellationToken);
     }
 
     public async Task AddAsync(Team team, CancellationToken cancellationToken)

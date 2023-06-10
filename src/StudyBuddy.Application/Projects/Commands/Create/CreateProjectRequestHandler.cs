@@ -1,6 +1,7 @@
 ﻿using StudyBuddy.Application.Services;
 using StudyBuddy.Domain.Projects.ValueObjects;
 using StudyBuddy.Domain.Repositories;
+using StudyBuddy.Domain.Teams.ValueObjects;
 using StudyBuddy.Domain.Users.ValueObjects;
 using StudyBuddy.Shared.Application.Interfaces;
 
@@ -49,7 +50,7 @@ public class CreateProjectRequestHandler : ICommandHandler<CreateProjectRequest>
             .GetByIdAsync(new UserId(request.UserId), cancellationToken);
 
         var team = request.TeamId is null ? null
-            : await _teamRepository.GetByIdAsync(request.TeamId.Value, cancellationToken);
+            : await _teamRepository.GetByIdAsync(new TeamId(request.TeamId.Value), cancellationToken);
 
         var project = new Domain.Projects.Project(
             id: validId,

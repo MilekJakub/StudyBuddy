@@ -25,7 +25,7 @@ public class AddProgrammingLanguagesToProjectRequestHandler
         CancellationToken cancellationToken)
     {
         var project = await _projectRepository
-            .GetByIdAsync(request.ProjectId, cancellationToken);
+            .GetByIdAsync(new ProjectId(request.ProjectId), cancellationToken);
         
         if (project is null)
         {

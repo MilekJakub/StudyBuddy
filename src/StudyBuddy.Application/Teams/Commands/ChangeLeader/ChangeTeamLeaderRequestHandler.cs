@@ -25,7 +25,7 @@ public class ChangeTeamLeaderRequestHandler
         CancellationToken cancellationToken)
     {
         var team = await _teamRepository
-            .GetByIdAsync(request.TeamId, cancellationToken);
+            .GetByIdAsync(new TeamId(request.TeamId), cancellationToken);
         
         if (team is null)
         {
@@ -33,7 +33,7 @@ public class ChangeTeamLeaderRequestHandler
         }
         
         var membership = await _teamRepository
-            .GetMembershipByIdAsync(request.NewLeaderMembershipId, cancellationToken);
+            .GetMembershipByIdAsync(new MembershipId(request.NewLeaderMembershipId), cancellationToken);
         
         team.ChangeLeader(membership.Id, new ProjectRole(request.NewRoleForPreviousLeader));
         await _unitOfWork.SaveChangesAsync(cancellationToken);

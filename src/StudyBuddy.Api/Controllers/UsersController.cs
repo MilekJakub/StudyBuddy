@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StudyBuddy.Application.Users.Commands.ChangeEmail;
 using StudyBuddy.Application.Users.Commands.ChangePassword;
@@ -12,6 +13,7 @@ namespace StudyBuddy.Api.Controllers;
 
 [ApiController]
 [Route("api")]
+[Authorize]
 public sealed class UsersController : ApiController
 {
     public UsersController(ISender sender) : base(sender)

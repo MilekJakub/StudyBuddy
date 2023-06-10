@@ -4,6 +4,7 @@ using StudyBuddy.Domain.Teams.Entities;
 using StudyBuddy.Domain.Teams.ValueObjects;
 using StudyBuddy.Domain.Users.ValueObjects;
 using StudyBuddy.Shared.Application.Interfaces;
+using StudyBuddy.Shared.Exceptions.Teams.BadRequest;
 using StudyBuddy.Shared.Exceptions.Teams.NotFound;
 
 namespace StudyBuddy.Application.Teams.Commands.AddMember;
@@ -29,7 +30,7 @@ public class AddMemberToTeamRequestHandler
         CancellationToken cancellationToken)
     {
         var team = await _teamRepository
-            .GetByIdAsync(request.TeamId, cancellationToken);
+            .GetByIdAsync(new TeamId(request.TeamId), cancellationToken);
             
         if (team is null)
         {
@@ -39,6 +40,9 @@ public class AddMemberToTeamRequestHandler
         var user = await _userRepository
             .GetByIdAsync(new UserId(request.UserId), cancellationToken);
 
+        var leader = team.GetLeader();
+        
+        
         var membership = new Membership(
             id: new MembershipId(Guid.NewGuid()),
             team: team,

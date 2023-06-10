@@ -2,6 +2,7 @@
 using StudyBuddy.Domain.Repositories;
 using StudyBuddy.Domain.Teams.ValueObjects;
 using StudyBuddy.Shared.Application.Interfaces;
+using StudyBuddy.Shared.Exceptions.Teams.NotFound;
 
 namespace StudyBuddy.Application.Teams.Commands.Update;
 
@@ -28,8 +29,13 @@ public class UpdateTeamRequestHandler : ICommandHandler<UpdateTeamRequest>
         }
 
         var team = await _teamRepository
-            .GetByIdAsync(request.TeamId, cancellationToken);
-        
+            .GetByIdAsync(new TeamId(request.TeamId), cancellationToken);
+
+        if (team is null)
+        {
+            throw new TeamNotFoundException(request.TeamId.ToString());
+        }
+
         team.ChangeName(new TeamName(request.Name!));
         await _unitOfWork.SaveChangesAsync(cancellationToken);
     }

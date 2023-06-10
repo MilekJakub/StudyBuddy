@@ -69,11 +69,6 @@ public sealed class User : Entity
 	    RegisterNumber = registerNumber;
     }
 
-    public void ChangeUsername(Username username)
-    {
-	    Username = username;
-    }
-
     private User()
 	{
 		// For Entity Framework

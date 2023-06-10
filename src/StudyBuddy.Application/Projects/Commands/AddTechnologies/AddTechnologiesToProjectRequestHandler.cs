@@ -25,7 +25,7 @@ public class AddTechnologiesToProjectRequestHandler
         CancellationToken cancellationToken)
     {
         var project = await _projectRepository
-            .GetByIdAsync(request.ProjectId);
+            .GetByIdAsync(new ProjectId(request.ProjectId));
         
         if (project is null)
         {

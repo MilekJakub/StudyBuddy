@@ -28,7 +28,7 @@ public class UpdateProjectRequestHandler
             throw new Exception("Cannot update the project. No values provided.");
         }
 
-        var project = await _projectRepository.GetByIdAsync(request.ProjectId);
+        var project = await _projectRepository.GetByIdAsync(new ProjectId(request.ProjectId));
 
         if (request.Topic is not null)
         {

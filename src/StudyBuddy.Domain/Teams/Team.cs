@@ -1,10 +1,12 @@
 using StudyBuddy.Domain.Projects;
+using StudyBuddy.Domain.Projects.ValueObjects;
 using StudyBuddy.Domain.Teams.Entities;
 using StudyBuddy.Domain.Teams.Events;
 using StudyBuddy.Domain.Teams.ValueObjects;
 using StudyBuddy.Domain.Users;
 using StudyBuddy.Domain.Users.ValueObjects;
 using StudyBuddy.Shared.Domain;
+using StudyBuddy.Shared.Exceptions.Projects.NotFound;
 using StudyBuddy.Shared.Exceptions.Teams.BadRequest;
 using StudyBuddy.Shared.Exceptions.Teams.NotFound;
 
@@ -43,6 +45,12 @@ public class Team : Entity
 		_projects.Add(project);
 		AddEvent(new ProjectAddedToTeamEvent(this, project));
 	}
+
+	public void RemoveProject(ProjectId projectId)
+	{
+		var project = GetProject(projectId);
+		_projects.Remove(project);
+	}
 	
 	public void ChangeName(TeamName name)
 	{
@@ -80,6 +88,12 @@ public class Team : Entity
 	{
 		var member = _memberships.SingleOrDefault(m => m.Id == id);
 		return member ?? throw new MembershipNotFoundException(id.ToString());
+	}
+
+	private Project GetProject(ProjectId id)
+	{
+		var project = _projects.SingleOrDefault(p => p.Id == id);
+		return project ?? throw new ProjectNotFoundException(id.ToString());
 	}
 
 	public Membership GetLeader()

@@ -43,6 +43,7 @@ public static class Mapper
             membership.User.Firstname.ToString(),
             membership.User.Lastname.ToString(),
             membership.User.RegisterNumber.ToString(),
+            membership.Team.Name.ToString(),
             membership.Role.ToString(),
             membership.JoinDate);
     }
@@ -62,7 +63,7 @@ public static class Mapper
             project.ProjectDifficultyId.ToString(),
             project.EstimatedTimeToFinish.Value,
             project.Deadline.Value,
-            project.ProjectState.ToString());
+            project.ProjectStateId.ToString());
     }
 
     public static ProjectRequirementDto ProjectRequirementDto(ProjectRequirement projectRequirement)

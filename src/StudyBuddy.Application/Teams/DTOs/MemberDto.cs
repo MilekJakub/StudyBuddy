@@ -7,5 +7,6 @@ public record MemberDto(
     string Firstname,
     string Lastname,
     string RegisterNumber,
+    string TeamName,
     string TeamRole,
     DateTime JoinDate);

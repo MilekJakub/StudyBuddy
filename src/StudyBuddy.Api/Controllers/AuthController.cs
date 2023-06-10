@@ -19,7 +19,7 @@ public sealed class AuthController : ApiController
     public async Task<IResult> RegisterUser([FromBody] RegisterUserRequest request, CancellationToken cancellationToken)
     {
         await Sender.Send(request, cancellationToken);
-        var response = new RegisterUserResponse(request.GetId().Value, request.GetToken());
+        var response = new RegisterUserResponse(request.GetId()!.Value, request.GetToken()!);
         return Results.Ok(response);
     }
     
@@ -27,7 +27,7 @@ public sealed class AuthController : ApiController
     public async Task<IResult> Login([FromBody] LoginUserRequest request, CancellationToken cancellationToken)
     {
         await Sender.Send(request, cancellationToken);
-        var response = new LoginUserResponse(request.GetToken());
+        var response = new LoginUserResponse(request.GetToken()!);
         return Results.Ok(response);
     }
 }

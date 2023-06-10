@@ -1,5 +1,6 @@
 ﻿using StudyBuddy.Application.Teams.DTOs;
 using StudyBuddy.Domain.Repositories;
+using StudyBuddy.Domain.Teams.ValueObjects;
 using StudyBuddy.Shared.Application.Interfaces;
 using StudyBuddy.Shared.Exceptions.Teams.NotFound;
 
@@ -19,7 +20,7 @@ public class GetTeamByIdRequestHandler
         GetTeamByIdRequest request,
         CancellationToken cancellationToken)
     {
-        var team = await _teamRepository.GetByIdAsync(request.Id, cancellationToken);
+        var team = await _teamRepository.GetByIdAsync(new TeamId(request.Id), cancellationToken);
 
         if (team is null)
         {

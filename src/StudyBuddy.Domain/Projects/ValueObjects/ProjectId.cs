@@ -4,4 +4,10 @@ using StudyBuddy.Shared.Exceptions.Users.BadRequest;
 
 namespace StudyBuddy.Domain.Projects.ValueObjects;
 
-public sealed record ProjectId(Guid Value);
+public sealed record ProjectId(Guid Value)
+{
+    public override string ToString()
+    {
+        return Value.ToString();
+    }
+}

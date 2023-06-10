@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StudyBuddy.Application.Projects.Commands.AddLanguages;
 using StudyBuddy.Application.Projects.Commands.AddRequirements;
@@ -20,6 +21,7 @@ namespace StudyBuddy.Api.Controllers;
 
 [ApiController]
 [Route("api")]
+[Authorize]
 public sealed class ProjectsController : ApiController
 {
     public ProjectsController(ISender sender) : base(sender)
@@ -34,7 +36,7 @@ public sealed class ProjectsController : ApiController
     }
     
     [HttpGet("projects/all")]
-    public async Task<IResult> GetAllProjects([FromRoute] GetAllProjectsRequest request, CancellationToken cancellationToken)
+    public async Task<IResult> GetAllProjects(GetAllProjectsRequest request, CancellationToken cancellationToken)
     {
         var projectDtos = await Sender.Send(request, cancellationToken);
         return Results.Ok(projectDtos);

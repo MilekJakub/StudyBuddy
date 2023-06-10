@@ -28,23 +28,16 @@ public class ProjectRepository : IProjectRepository
         _projectStates = context.ProjectStates;
     }
     
-    public async Task<Project> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    public async Task<Project?> GetByIdAsync(ProjectId id, CancellationToken cancellationToken = default)
     {
-        var project = await _projects
+        return await _projects
             .Include(p => p.Requirements)
             .Include(p => p.Technologies)
             .Include(p => p.ProgrammingLanguages)
             .Include(p => p.Team)
             .Include(p => p.ProjectDifficulty)
             .Include(p => p.ProjectState)
-            .SingleOrDefaultAsync(cancellationToken);
-        
-        if (project is null)
-        {
-            throw new ProjectNotFoundException(id.ToString());
-        }
-
-        return project;
+            .SingleOrDefaultAsync(p => p.Id == id);
     }
 
     public async Task<IEnumerable<Project>> GetAll(CancellationToken cancellationToken = default)
