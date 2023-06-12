@@ -58,9 +58,7 @@ The main goal was to learn Clean Architecture and Domain-Driven Design by buildi
 
 The project is not finished, but have implemented core functionalities.
 
-Authorization is done by using JWT Tokens generation, but there is no authentication.
-
-Since there is no authentication some of core concepts are not implemented yet.
+Authorization is done by using JWT Tokens generation.
 
 ## Buzzwords
 

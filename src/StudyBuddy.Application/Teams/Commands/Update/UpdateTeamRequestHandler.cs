@@ -1,7 +1,9 @@
-﻿using StudyBuddy.Application.Services;
+﻿using System.Security.Claims;
+using StudyBuddy.Application.Services;
 using StudyBuddy.Domain.Repositories;
 using StudyBuddy.Domain.Teams.ValueObjects;
 using StudyBuddy.Shared.Application.Interfaces;
+using StudyBuddy.Shared.Exceptions.Responses;
 using StudyBuddy.Shared.Exceptions.Teams.NotFound;
 
 namespace StudyBuddy.Application.Teams.Commands.Update;
@@ -23,6 +25,16 @@ public class UpdateTeamRequestHandler : ICommandHandler<UpdateTeamRequest>
         UpdateTeamRequest request,
         CancellationToken cancellationToken)
     {
+        var claims = request.GetClaims();
+        var userId = claims.FirstOrDefault(x => x.Type == "userId")?.Value;
+        var role = claims.FirstOrDefault(x => x.Type == ClaimTypes.Role)?.Value;
+        var isAdminOrTeacher = role is "admin" or "teacher";
+
+        if (userId is null && !isAdminOrTeacher)
+        {
+            throw new UnauthorizedException();
+        }
+        
         if (!IsValid(request))
         {
             throw new Exception("Cannot update the project. No values provided.");
@@ -34,6 +46,18 @@ public class UpdateTeamRequestHandler : ICommandHandler<UpdateTeamRequest>
         if (team is null)
         {
             throw new TeamNotFoundException(request.TeamId.ToString());
+        }
+        
+        var userMembership = team.Memberships.FirstOrDefault(x => x.UserId.Value == Guid.Parse(userId));
+
+        if (userMembership is null && !isAdminOrTeacher)
+        {
+            throw new Exception("NotTeamMemberException");
+        }
+
+        if (userMembership?.UserId != team.GetLeader().UserId && !isAdminOrTeacher)
+        {
+            throw new Exception("NotTeamLeaderException");
         }
 
         team.ChangeName(new TeamName(request.Name!));

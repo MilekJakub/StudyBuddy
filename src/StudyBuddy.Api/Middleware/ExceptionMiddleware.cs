@@ -39,8 +39,8 @@ public class ExceptionMiddleware
                 statusCode = HttpStatusCode.BadRequest;
                 break;
             
-            case ValidationException validationException:
-                statusCode = HttpStatusCode.BadRequest;
+            case UnauthorizedException unauthorizedException:
+                statusCode = HttpStatusCode.Unauthorized;
                 break;
             
             case NotFoundException notFoundException:

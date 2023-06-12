@@ -1,8 +1,10 @@
-﻿using StudyBuddy.Application.Services;
+﻿using System.Security.Claims;
+using StudyBuddy.Application.Services;
 using StudyBuddy.Domain.Projects.ValueObjects;
 using StudyBuddy.Domain.Repositories;
 using StudyBuddy.Shared.Application.Interfaces;
 using StudyBuddy.Shared.Exceptions.Projects.NotFound;
+using StudyBuddy.Shared.Exceptions.Responses;
 
 namespace StudyBuddy.Application.Projects.Commands.AddTechnologies;
 
@@ -24,6 +26,16 @@ public class AddTechnologiesToProjectRequestHandler
         AddTechnologiesToProjectRequest request,
         CancellationToken cancellationToken)
     {
+        var claims = request.GetClaims();
+        var userId = claims.FirstOrDefault(x => x.Type == "userId")?.Value;
+        var role = claims.FirstOrDefault(x => x.Type == ClaimTypes.Role)?.Value;
+        var isAdminOrTeacher = role is "admin" or "teacher";
+
+        if (userId is null && !isAdminOrTeacher)
+        {
+            throw new UnauthorizedException();
+        }
+
         var project = await _projectRepository
             .GetByIdAsync(new ProjectId(request.ProjectId));
         
@@ -31,9 +43,21 @@ public class AddTechnologiesToProjectRequestHandler
         {
             throw new ProjectNotFoundException(request.ProjectId.ToString());
         }
+        
+        var userMembership = project.Team.Memberships.FirstOrDefault(x => x.UserId.Value.ToString() == userId);
+
+        if (userMembership is null && !isAdminOrTeacher)
+        {
+            throw new Exception("NotTeamMemberException");
+        }
+
+        if (userMembership?.UserId != project.Team.GetLeader().UserId && !isAdminOrTeacher)
+        {
+            throw new Exception("NotTeamLeaderException");
+        }
 
         var validTechnologies = request.Technologies
-            .Select(t => new ProjectTechnology(t.Name, t.Description, t.Version));
+            .Select(t => new Technology(t.Name, t.Description, t.Version));
         
         project.AddTechnologies(validTechnologies);
         await _unitOfWork.SaveChangesAsync(cancellationToken);

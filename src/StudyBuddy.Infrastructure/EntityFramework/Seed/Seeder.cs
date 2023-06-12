@@ -85,13 +85,13 @@ public static class Seeder
                 new ProjectRequirement("Every team member should have role representing field of work.", "some description...")
             };
 
-            var technologies = new List<ProjectTechnology>()
+            var technologies = new List<Technology>()
             {
-                new ProjectTechnology("ASP.NET", "some description...", null),
-                new ProjectTechnology("EntityFramework", "some description...", null),
-                new ProjectTechnology("JWT Token Generation", "some description...", null),
-                new ProjectTechnology("MS SQL Server", "some description...", null),
-                new ProjectTechnology("XUnit", "some description...", null)
+                new Technology("ASP.NET", "some description...", null),
+                new Technology("EntityFramework", "some description...", null),
+                new Technology("JWT Token Generation", "some description...", null),
+                new Technology("MS SQL Server", "some description...", null),
+                new Technology("XUnit", "some description...", null)
             };
 
             var languages = new List<ProgrammingLanguage>()

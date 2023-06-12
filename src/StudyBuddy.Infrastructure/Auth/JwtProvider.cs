@@ -33,9 +33,7 @@ public class JwtProvider : IJwtProvider
         Claim[] claims =
         {
             new Claim("userId", user.Id.ToString()),
-            new Claim("email", user.Email.Value),
-            new Claim("firstname", user.Firstname.Value),
-            new Claim("lastname", user.Lastname.Value)
+            new Claim("role", user.Role.Value)
         };
 
         var tokenExpirationTime = _clock.Current().AddMinutes(jwtSettings.TokenExpirationInMinutes);

@@ -5,7 +5,7 @@ namespace StudyBuddy.Domain.Users.ValueObjects;
 
 public sealed record Email : IValueObject
 {
-	public Email()
+	private Email()
 	{
 		// For Entity Framework
 	}

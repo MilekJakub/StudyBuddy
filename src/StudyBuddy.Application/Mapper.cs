@@ -69,8 +69,8 @@ public static class Mapper
     public static ProjectRequirementDto ProjectRequirementDto(ProjectRequirement projectRequirement)
         => new(projectRequirement.Requirement, projectRequirement.Description);
 
-    public static ProjectTechnologyDto ProjectTechnologyDto(ProjectTechnology projectTechnology)
-        => new(projectTechnology.Name, projectTechnology.Description, projectTechnology.Version);
+    public static ProjectTechnologyDto ProjectTechnologyDto(Technology technology)
+        => new(technology.Name, technology.Description, technology.Version);
 
     public static ProgrammingLanguageDto ProjectLanguageDto(ProgrammingLanguage programmingLanguage)
         => new(programmingLanguage.Name, programmingLanguage.Version);

@@ -3,4 +3,4 @@ using StudyBuddy.Shared.Domain.Interfaces;
 
 namespace StudyBuddy.Domain.Projects.Events;
 
-public record TechnologyAddedToProjectEvent(Project Project, ProjectTechnology Technology) : IDomainEvent;
+public record TechnologyAddedToProjectEvent(Project Project, Technology Technology) : IDomainEvent;

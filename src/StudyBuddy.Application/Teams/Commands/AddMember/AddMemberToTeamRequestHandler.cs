@@ -1,9 +1,11 @@
-﻿using StudyBuddy.Application.Services;
+﻿using System.Security.Claims;
+using StudyBuddy.Application.Services;
 using StudyBuddy.Domain.Repositories;
 using StudyBuddy.Domain.Teams.Entities;
 using StudyBuddy.Domain.Teams.ValueObjects;
 using StudyBuddy.Domain.Users.ValueObjects;
 using StudyBuddy.Shared.Application.Interfaces;
+using StudyBuddy.Shared.Exceptions.Responses;
 using StudyBuddy.Shared.Exceptions.Teams.BadRequest;
 using StudyBuddy.Shared.Exceptions.Teams.NotFound;
 
@@ -29,6 +31,16 @@ public class AddMemberToTeamRequestHandler
         AddMemberToTeamRequest request,
         CancellationToken cancellationToken)
     {
+        var claims = request.GetClaims();
+        var userId = claims.FirstOrDefault(x => x.Type == "userId")?.Value;
+        var role = claims.FirstOrDefault(x => x.Type == ClaimTypes.Role)?.Value;
+        var isAdminOrTeacher = role is "admin" or "teacher";
+
+        if (userId is null && !isAdminOrTeacher)
+        {
+            throw new UnauthorizedException();
+        }
+        
         var team = await _teamRepository
             .GetByIdAsync(new TeamId(request.TeamId), cancellationToken);
             
@@ -37,20 +49,29 @@ public class AddMemberToTeamRequestHandler
             throw new TeamNotFoundException(request.TeamId.ToString());
         }
         
-        var user = await _userRepository
-            .GetByIdAsync(new UserId(request.UserId), cancellationToken);
+        var userMembership = team.Memberships.FirstOrDefault(x => x.UserId.Value.ToString() == userId);
 
-        var leader = team.GetLeader();
+        if (userMembership is null && !isAdminOrTeacher)
+        {
+            throw new Exception("NotTeamMemberException");
+        }
+
+        if (userMembership?.UserId != team.GetLeader().UserId && !isAdminOrTeacher)
+        {
+            throw new Exception("NotTeamLeaderException");
+        }
         
-        
-        var membership = new Membership(
+        var userToAdd = await _userRepository
+            .GetByUsernameAsync(new Username(request.Username), cancellationToken);
+
+        var newMembership = new Membership(
             id: new MembershipId(Guid.NewGuid()),
             team: team,
-            user: user,
+            user: userToAdd,
             role: new ProjectRole(request.Role),
             joinDate: DateTime.UtcNow);
         
-        team.AddMember(membership);
+        team.AddMember(newMembership);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
     }
 }

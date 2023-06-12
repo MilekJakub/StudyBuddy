@@ -3,9 +3,9 @@ using StudyBuddy.Shared.Domain.Interfaces;
 
 namespace StudyBuddy.Domain.Projects.ValueObjects;
 
-public sealed record ProjectTechnology : IValueObject
+public sealed record Technology : IValueObject
 {
-	public ProjectTechnology(string name, string description, string? version)
+	public Technology(string name, string description, string? version)
 	{
 		// TODO: checks
 		// null or empty
@@ -22,7 +22,7 @@ public sealed record ProjectTechnology : IValueObject
 
 	public override string ToString() => Name;
 
-	private ProjectTechnology()
+	private Technology()
 	{
 		// For Entity Framework
 	}

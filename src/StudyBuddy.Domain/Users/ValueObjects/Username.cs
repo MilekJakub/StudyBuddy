@@ -13,6 +13,12 @@ public sealed record Username : IValueObject
 	public Username(string username)
 	{
 		// TODO: checks
+
+		if (string.IsNullOrWhiteSpace(username))
+		{
+			throw new Exception("Invalid username");
+		}
+		
 		Value = username;
 	}
 

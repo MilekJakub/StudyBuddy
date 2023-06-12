@@ -13,7 +13,7 @@ namespace StudyBuddy.Domain.Projects;
 public class Project : Entity
 {
 	private readonly List<ProjectRequirement> _requirements = new();
-	private readonly List<ProjectTechnology> _technologies = new();
+	private readonly List<Technology> _technologies = new();
 	private readonly List<ProgrammingLanguage> _languages = new();
 
 	public Project(
@@ -63,7 +63,7 @@ public class Project : Entity
 	
 	public IReadOnlyCollection<ProjectRequirement> Requirements
 		=> _requirements;
-	public IReadOnlyCollection<ProjectTechnology> Technologies
+	public IReadOnlyCollection<Technology> Technologies
 		=> _technologies;
 	public IReadOnlyCollection<ProgrammingLanguage> ProgrammingLanguages
 		=> _languages;
@@ -117,13 +117,13 @@ public class Project : Entity
 		}
 	}
 
-	public void AddTechnology(ProjectTechnology technology)
+	public void AddTechnology(Technology technology)
 	{
 		_technologies.Add(technology);
 		AddEvent(new TechnologyAddedToProjectEvent(this, technology));
 	}
 
-	public void AddTechnologies(IEnumerable<ProjectTechnology> technologies)
+	public void AddTechnologies(IEnumerable<Technology> technologies)
 	{
 		foreach(var technology in technologies)
 		{
@@ -213,7 +213,7 @@ public class Project : Entity
 		throw new RequirementNotFoundException(name);
 	}
 
-	private ProjectTechnology GetTechnology(string name)
+	private Technology GetTechnology(string name)
 	{
 		foreach(var technology in Technologies)
 		{

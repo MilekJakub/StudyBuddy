@@ -12,7 +12,7 @@ namespace StudyBuddy.Infrastructure.EntityFramework.Configurations;
 public class ProjectConfiguration
 	: IEntityTypeConfiguration<Project>,
 	  IEntityTypeConfiguration<ProjectRequirement>,
-	  IEntityTypeConfiguration<ProjectTechnology>,
+	  IEntityTypeConfiguration<Technology>,
 	  IEntityTypeConfiguration<ProgrammingLanguage>,
 	  IEntityTypeConfiguration<ProjectDifficulty>,
 	  IEntityTypeConfiguration<ProjectState>
@@ -86,7 +86,7 @@ public class ProjectConfiguration
 	    builder.ToTable("ProjectRequirements");
     }
 
-    public void Configure(EntityTypeBuilder<ProjectTechnology> builder)
+    public void Configure(EntityTypeBuilder<Technology> builder)
     {
 	    builder.Property<Guid>("Id");
 	    builder.Property(pt => pt.Name);

@@ -21,7 +21,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<Project> Projects { get; set; }
     
     public DbSet<ProjectRequirement> ProjectRequirements { get; set; }
-    public DbSet<ProjectTechnology> ProjectTechnologies { get; set; }
+    public DbSet<Technology> ProjectTechnologies { get; set; }
     public DbSet<ProgrammingLanguage> ProgrammingLanguages { get; set; }
     public DbSet<ProjectDifficulty> ProjectDifficulties { get; set; }
     public DbSet<ProjectState> ProjectStates { get; set; }

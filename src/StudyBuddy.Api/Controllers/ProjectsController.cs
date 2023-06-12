@@ -52,6 +52,7 @@ public sealed class ProjectsController : ApiController
     [HttpDelete("projects")]
     public async Task<IResult> DeleteTeam([FromBody] DeleteProjectRequest request, CancellationToken cancellationToken)
     {
+        request.SetClaims(User.Claims);
         await Sender.Send(request, cancellationToken);
         return Results.NoContent();
     }
@@ -59,6 +60,7 @@ public sealed class ProjectsController : ApiController
     [HttpPut("projects")]
     public async Task<IResult> UpdateTeam([FromBody] UpdateProjectRequest request, CancellationToken cancellationToken)
     {
+        request.SetClaims(User.Claims);
         await Sender.Send(request, cancellationToken);
         return Results.Ok();
     }
@@ -73,6 +75,7 @@ public sealed class ProjectsController : ApiController
     [HttpPost("projects/requirements")]
     public async Task<IResult> AddRequirements([FromBody] AddRequirementsToProjectRequest request, CancellationToken cancellationToken)
     {
+        request.SetClaims(User.Claims);
         await Sender.Send(request, cancellationToken);
         return Results.Ok();
     }
@@ -80,6 +83,7 @@ public sealed class ProjectsController : ApiController
     [HttpDelete("projects/requirements")]
     public async Task<IResult> RemoveRequirements([FromBody] RemoveRequirementsFromProjectRequest request, CancellationToken cancellationToken)
     {
+        request.SetClaims(User.Claims);
         await Sender.Send(request, cancellationToken);
         return Results.NoContent();
     }
@@ -94,6 +98,7 @@ public sealed class ProjectsController : ApiController
     [HttpPost("projects/languages")]
     public async Task<IResult> AddProgrammingLanguages([FromBody] AddProgrammingLanguagesToProjectRequest request, CancellationToken cancellationToken)
     {
+        request.SetClaims(User.Claims);
         await Sender.Send(request, cancellationToken);
         return Results.Ok();
     }
@@ -101,6 +106,7 @@ public sealed class ProjectsController : ApiController
     [HttpDelete("projects/languages")]
     public async Task<IResult> RemoveProgrammingLanguages([FromBody] RemoveProgrammingLanguagesFromProjectRequest request, CancellationToken cancellationToken)
     {
+        request.SetClaims(User.Claims);
         await Sender.Send(request, cancellationToken);
         return Results.NoContent();
     }
@@ -115,6 +121,7 @@ public sealed class ProjectsController : ApiController
     [HttpPost("projects/technologies")]
     public async Task<IResult> AddTechnologies([FromBody] AddTechnologiesToProjectRequest request, CancellationToken cancellationToken)
     {
+        request.SetClaims(User.Claims);
         await Sender.Send(request, cancellationToken);
         return Results.Ok();
     }
@@ -122,6 +129,7 @@ public sealed class ProjectsController : ApiController
     [HttpDelete("projects/technologies")]
     public async Task<IResult> RemoveTechnologies([FromBody] RemoveTechnologiesFromProjectRequest request, CancellationToken cancellationToken)
     {
+        request.SetClaims(User.Claims);
         await Sender.Send(request, cancellationToken);
         return Results.NoContent();
     }

@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using StudyBuddy.Application.Teams.Commands.AddMember;
 using StudyBuddy.Application.Teams.Commands.ChangeLeader;
@@ -48,6 +49,7 @@ public sealed class TeamsController : ApiController
     [HttpDelete("teams")]
     public async Task<IResult> DeleteTeam([FromBody] DeleteTeamRequest request, CancellationToken cancellationToken)
     {
+        request.SetClaims(User.Claims);
         await Sender.Send(request, cancellationToken);
         return Results.NoContent();
     }
@@ -55,6 +57,7 @@ public sealed class TeamsController : ApiController
     [HttpPut("teams")]
     public async Task<IResult> ChangeName(UpdateTeamRequest request, CancellationToken cancellationToken)
     {
+        request.SetClaims(User.Claims);
         await Sender.Send(request, cancellationToken);
         return Results.Ok();
     }
@@ -62,6 +65,7 @@ public sealed class TeamsController : ApiController
     [HttpPut("teams/leader")]
     public async Task<IResult> ChangeLeader(ChangeTeamLeaderRequest request, CancellationToken cancellationToken)
     {
+        request.SetClaims(User.Claims);
         await Sender.Send(request, cancellationToken);
         return Results.Ok();
     }
@@ -73,9 +77,10 @@ public sealed class TeamsController : ApiController
         return Results.Ok(memberDtos);
     }
     
-    [HttpPost("teams/members/{Id}")]
+    [HttpPost("teams/members")]
     public async Task<IResult> AddMember([FromBody] AddMemberToTeamRequest request, CancellationToken cancellationToken)
     {
+        request.SetClaims(User.Claims);
         await Sender.Send(request, cancellationToken);
         return Results.Ok();
     }
@@ -83,6 +88,7 @@ public sealed class TeamsController : ApiController
     [HttpDelete("teams/members/{Id}")]
     public async Task<IResult> KickMember([FromBody] KickTeamMemberRequest request, CancellationToken cancellationToken)
     {
+        request.SetClaims(User.Claims);
         await Sender.Send(request, cancellationToken);
         return Results.Ok();
     }

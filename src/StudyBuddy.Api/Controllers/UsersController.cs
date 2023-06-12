@@ -37,6 +37,7 @@ public sealed class UsersController : ApiController
     [HttpDelete("users")]
     public async Task<IResult> DeleteUser([FromBody] DeleteUserRequest request, CancellationToken cancellationToken)
     {
+        request.SetClaims(User.Claims);
         await Sender.Send(request, cancellationToken);
         return Results.NoContent();
     }
@@ -44,6 +45,7 @@ public sealed class UsersController : ApiController
     [HttpPut("users/email")]
     public async Task<IResult> ChangeEmail([FromBody] ChangeEmailRequest request, CancellationToken cancellationToken)
     {
+        request.SetClaims(User.Claims);
        await Sender.Send(request, cancellationToken);
        return Results.Ok();
     }
@@ -51,6 +53,7 @@ public sealed class UsersController : ApiController
     [HttpPut("users/password")]
     public async Task<IResult> ChangePassword([FromBody] ChangePasswordRequest request, CancellationToken cancellationToken)
     {
+        request.SetClaims(User.Claims);
        await Sender.Send(request, cancellationToken);
        return Results.Ok();
     }
@@ -59,6 +62,7 @@ public sealed class UsersController : ApiController
     [HttpPut("users")]
     public async Task<IResult> ChangeFirstname([FromBody] UpdateUserRequest request, CancellationToken cancellationToken)
     {
+        request.SetClaims(User.Claims);
        await Sender.Send(request, cancellationToken);
        return Results.Ok();
     }

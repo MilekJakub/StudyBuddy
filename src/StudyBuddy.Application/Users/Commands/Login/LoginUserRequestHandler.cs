@@ -30,7 +30,7 @@ public class LoginUserRequestHandler : ICommandHandler<LoginUserRequest>
         var validUsername = new Username(request.Username);
         var validPassword = new Password(request.Password);
         
-        var user = await _userRepository.GetByUsernameAsync(validUsername);
+        var user = await _userRepository.GetByUsernameAsync(validUsername, cancellationToken);
 
         if (user is null)
         {

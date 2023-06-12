@@ -13,7 +13,7 @@ public class ProjectRepository : IProjectRepository
 {
     private readonly DbSet<Project> _projects;
     private DbSet<ProjectRequirement> _projectRequirements;
-    private DbSet<ProjectTechnology> _projectTechnologies;
+    private DbSet<Technology> _projectTechnologies;
     private DbSet<ProgrammingLanguage> _programmingLanguages;
     private DbSet<ProjectDifficulty> _projectDifficulties;
     private DbSet<ProjectState> _projectStates;

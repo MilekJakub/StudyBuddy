@@ -1,7 +1,12 @@
+using System.Diagnostics.CodeAnalysis;
+using StudyBuddy.Domain.Projects.ValueObjects;
 using StudyBuddy.Domain.Teams.Entities;
+using StudyBuddy.Domain.Teams.ValueObjects;
 using StudyBuddy.Domain.Users.Events;
 using StudyBuddy.Domain.Users.ValueObjects;
 using StudyBuddy.Shared.Domain;
+using StudyBuddy.Shared.Exceptions.Teams.NotFound;
+using StudyBuddy.Shared.Exceptions.Users.NotFound;
 
 namespace StudyBuddy.Domain.Users;
 
