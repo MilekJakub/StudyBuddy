@@ -10,7 +10,7 @@ public class ApplicationDbContextFactory
     public ApplicationDbContext CreateDbContext(string[] args)
     {
         var configuration = new ConfigurationBuilder()
-            .SetBasePath(@"C:\Users\Jakub.Milek\Desktop\StudyBuddy\src\StudyBuddy.Api")
+            .SetBasePath(@"")
             .AddJsonFile("appsettings.json")
             .Build();
 
@@ -20,5 +20,5 @@ public class ApplicationDbContextFactory
         builder.UseSqlServer(connectionString);
 
         return new ApplicationDbContext(builder.Options);
-    } 
+    }
 }

@@ -36,7 +36,7 @@ public sealed class ProjectsController : ApiController
     }
     
     [HttpGet("projects/all")]
-    public async Task<IResult> GetAllProjects(GetAllProjectsRequest request, CancellationToken cancellationToken)
+    public async Task<IResult> GetAllProjects([FromRoute]GetAllProjectsRequest request, CancellationToken cancellationToken)
     {
         var projectDtos = await Sender.Send(request, cancellationToken);
         return Results.Ok(projectDtos);
