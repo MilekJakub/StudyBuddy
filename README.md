@@ -1,5 +1,17 @@
 # Study Buddy
 
+## Endpoints
+
+![Endpoints](./docs/endpoints.png)
+
+## Project Structure
+
+![Endpoints](./docs/project_structure.jpg)
+
+## Relations
+
+![Endpoints](./docs/relations.png)
+
 ## Student project management application.
 
 Studdy Buddy is an application that allows the management of student projects.
